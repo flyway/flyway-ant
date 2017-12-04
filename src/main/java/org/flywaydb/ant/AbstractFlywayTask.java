@@ -404,6 +404,7 @@ public abstract class AbstractFlywayTask extends Task {
      *
      * @param sqlMigrationSuffix The file name suffix for Sql migrations (default: .sql)<br>Also configurable with Ant Property: ${flyway.sqlMigrationSuffix}
      */
+    // TODO change to `setSqlMigrationSuffixes`
     public void setSqlMigrationSuffix(String sqlMigrationSuffix) {
         flyway.setSqlMigrationSuffixes(sqlMigrationSuffix);
     }
