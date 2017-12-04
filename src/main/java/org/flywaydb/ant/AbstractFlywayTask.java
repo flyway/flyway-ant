@@ -47,7 +47,7 @@ public abstract class AbstractFlywayTask extends Task {
      */
     private static final String PLACEHOLDERS_PROPERTY_PREFIX = "flyway.placeholders.";
 
-    private Flyway flyway = new Flyway();
+    private Flyway flyway = new Flyway(Thread.currentThread().getContextClassLoader());
 
     /**
      * Logger.
@@ -258,20 +258,6 @@ public abstract class AbstractFlywayTask extends Task {
         flyway.setInstalledBy(installedBy);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Creates the datasource base on the provided parameters.
      *
@@ -419,7 +405,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param sqlMigrationSuffix The file name suffix for Sql migrations (default: .sql)<br>Also configurable with Ant Property: ${flyway.sqlMigrationSuffix}
      */
     public void setSqlMigrationSuffix(String sqlMigrationSuffix) {
-        flyway.setSqlMigrationSuffix(sqlMigrationSuffix);
+        flyway.setSqlMigrationSuffixes(sqlMigrationSuffix);
     }
 
     /**
@@ -564,7 +550,6 @@ public abstract class AbstractFlywayTask extends Task {
         prepareClassPath();
 
         try {
-            flyway.setClassLoader(Thread.currentThread().getContextClassLoader());
             flyway.setDataSource(createDataSource());
 
             if (resolvers != null) {
