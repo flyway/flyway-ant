@@ -1,0 +1,22 @@
+<project name="FlywayAntPluginTest" xmlns:flyway="antlib:org.flywaydb.ant">
+
+    <path id="flyway.lib.path" /><!-- flyway and h2 libs already on the classpath -->
+
+    <taskdef uri="antlib:org.flywaydb.ant" resource="org/flywaydb/ant/antlib.xml"
+             classpathref="flyway.lib.path"/>
+
+    <target name="migrate-test" depends="-check-db">
+        <flyway:migrate driver="org.h2.Driver" url="jdbc:h2:${db}" user="sa" password="" />
+    </target>
+
+    <target name="-check-db">
+        <fail message="Property 'db' must be set.">
+            <condition>
+                <not>
+                    <isset property="db"/>
+                </not>
+            </condition>
+        </fail>
+    </target>
+
+</project>

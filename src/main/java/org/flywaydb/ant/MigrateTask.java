@@ -15,6 +15,8 @@
  */
 package org.flywaydb.ant;
 
+import java.util.Arrays;
+
 import org.flywaydb.core.Flyway;
 
 /**
@@ -25,7 +27,8 @@ public class MigrateTask extends AbstractFlywayTask {
     @Override
     protected void doExecute(Flyway flyway) throws Exception {
         if (flyway.info().all().length == 0) {
-            log.warn("Possible solution: run the Ant javac and copy tasks first so Flyway can find the migrations");
+            log.warn("No migrations found.");
+            log.warn("Possible solution: run the Ant javac and copy tasks first so Flyway can find the migrations.");
             return;
         }
 

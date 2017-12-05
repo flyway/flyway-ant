@@ -47,7 +47,7 @@ public abstract class AbstractFlywayTask extends Task {
      */
     private static final String PLACEHOLDERS_PROPERTY_PREFIX = "flyway.placeholders.";
 
-    private final Flyway flyway = new Flyway(Thread.currentThread().getContextClassLoader());
+    private final Flyway flyway;
 
     /**
      * Logger.
@@ -85,7 +85,7 @@ public abstract class AbstractFlywayTask extends Task {
      * Locations on the classpath to scan recursively for migrations. Locations may contain both sql
      * and java-based migrations. (default: db.migration)<br>Also configurable with Ant Property: ${flyway.locations}
      */
-    private String[] locations = flyway.getLocations();
+    private String[] locations;
 
     /**
      * The custom MigrationResolvers to be used in addition or as replacement to the built-in (as determined by the
@@ -103,7 +103,20 @@ public abstract class AbstractFlywayTask extends Task {
     /**
      * A map of &lt;placeholder, replacementValue&gt; to apply to sql migration scripts.
      */
-    private Map<String, String> placeholders = flyway.getPlaceholders();
+    private Map<String, String> placeholders;
+
+    /**
+     * Default constructor.
+     */
+    public AbstractFlywayTask() {
+        this(new Flyway(Thread.currentThread().getContextClassLoader()));
+    }
+
+    AbstractFlywayTask(Flyway flyway) {
+        this.flyway = flyway;
+        this.locations = flyway.getLocations();
+        this.placeholders = flyway.getPlaceholders();
+    }
 
     /**
      * @param classpath The classpath used to load the JDBC driver and the migrations.<br>Also configurable with Ant
@@ -630,7 +643,7 @@ public abstract class AbstractFlywayTask extends Task {
         for (Object property : properties.keySet()) {
             String propertyName = (String) property;
             if (propertyName.startsWith(PLACEHOLDERS_PROPERTY_PREFIX)
-                    && propertyName.length() > PLACEHOLDERS_PROPERTY_PREFIX.length()) {
+                && propertyName.length() > PLACEHOLDERS_PROPERTY_PREFIX.length()) {
                 String placeholderName = propertyName.substring(PLACEHOLDERS_PROPERTY_PREFIX.length());
                 String placeholderValue = (String) properties.get(propertyName);
                 placeholders.put(placeholderName, placeholderValue);
