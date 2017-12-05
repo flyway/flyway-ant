@@ -47,7 +47,7 @@ public abstract class AbstractFlywayTask extends Task {
      */
     private static final String PLACEHOLDERS_PROPERTY_PREFIX = "flyway.placeholders.";
 
-    private Flyway flyway = new Flyway(Thread.currentThread().getContextClassLoader());
+    private final Flyway flyway = new Flyway(Thread.currentThread().getContextClassLoader());
 
     /**
      * Logger.
@@ -401,12 +401,13 @@ public abstract class AbstractFlywayTask extends Task {
     /**
      * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix ,
      * which using the defaults translates to V1_1__My_description.sql</p>
+     * <p>Multiple suffixes (like .sql,.pkg,.pkb) can be specified for easier compatibility with other tools such as
+     * editors with specific file associations.</p>
      *
-     * @param sqlMigrationSuffix The file name suffix for Sql migrations (default: .sql)<br>Also configurable with Ant Property: ${flyway.sqlMigrationSuffix}
+     * @param sqlMigrationSuffixes The file name suffixes for SQL migrations, comma-separated. (default: .sql)<br>Also configurable with Ant Property: ${flyway.sqlMigrationSuffixes}
      */
-    // TODO change to `setSqlMigrationSuffixes`
-    public void setSqlMigrationSuffix(String sqlMigrationSuffix) {
-        flyway.setSqlMigrationSuffixes(sqlMigrationSuffix);
+    public void setSqlMigrationSuffixes(String sqlMigrationSuffixes) {
+        flyway.setSqlMigrationSuffixes(sqlMigrationSuffixes.split(","));
     }
 
     /**
