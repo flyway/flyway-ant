@@ -407,7 +407,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param sqlMigrationSuffixes The file name suffixes for SQL migrations, comma-separated. (default: .sql)<br>Also configurable with Ant Property: ${flyway.sqlMigrationSuffixes}
      */
     public void setSqlMigrationSuffixes(String sqlMigrationSuffixes) {
-        flyway.setSqlMigrationSuffixes(sqlMigrationSuffixes.split(","));
+        flyway.setSqlMigrationSuffixes(StringUtils.tokenizeToStringArray(sqlMigrationSuffixes, ","));
     }
 
     /**
