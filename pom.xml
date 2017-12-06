@@ -80,31 +80,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.2</version>
-                <executions>
-                    <execution>
-                        <id>copy-h2-libraries</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <skip>${skipTests}</skip>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.h2database</groupId>
-                                    <artifactId>h2</artifactId>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.testOutputDirectory}/lib</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
