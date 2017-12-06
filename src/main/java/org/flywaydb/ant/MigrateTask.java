@@ -15,8 +15,6 @@
  */
 package org.flywaydb.ant;
 
-import java.util.Arrays;
-
 import org.flywaydb.core.Flyway;
 
 /**

@@ -15,9 +15,9 @@
  */
 package org.flywaydb.ant;
 
-import org.flywaydb.core.api.logging.Log;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.flywaydb.core.api.logging.Log;
 
 /**
  * Wrapper around an Ant Logger.

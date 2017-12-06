@@ -19,8 +19,7 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.internal.info.MigrationInfoDumper;
 
 /**
- * Ant task to retrieve the complete information about the migrations including applied, pending and current migrations with
- * details and status.
+ * Ant task to retrieve the complete information about the migrations including applied, pending and current migrations with details and status.
  */
 public class InfoTask extends AbstractFlywayTask {
     @Override

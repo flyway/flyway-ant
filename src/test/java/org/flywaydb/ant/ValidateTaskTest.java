@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
-import org.flywaydb.core.api.FlywayException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

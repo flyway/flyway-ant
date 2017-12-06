@@ -15,9 +15,9 @@
  */
 package org.flywaydb.ant;
 
+import org.apache.tools.ant.Project;
 import org.flywaydb.core.api.logging.Log;
 import org.flywaydb.core.api.logging.LogCreator;
-import org.apache.tools.ant.Project;
 
 /**
  * Log Creator for Ant Logging.

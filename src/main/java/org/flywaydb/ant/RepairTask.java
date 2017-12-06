@@ -18,11 +18,8 @@ package org.flywaydb.ant;
 import org.flywaydb.core.Flyway;
 
 /**
- * Repairs the Flyway metadata table. This will perform the following actions:
- * <ul>
- *     <li>Remove any failed migrations on databases without DDL transactions (User objects left behind must still be cleaned up manually)</li>
- *     <li>Correct wrong checksums</li>
- * </ul>
+ * Repairs the Flyway metadata table. This will perform the following actions: <ul> <li>Remove any failed migrations on databases without DDL transactions (User
+ * objects left behind must still be cleaned up manually)</li> <li>Correct wrong checksums</li> </ul>
  */
 public class RepairTask extends AbstractFlywayTask {
     @Override

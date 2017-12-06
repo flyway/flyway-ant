@@ -15,20 +15,6 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
-import org.flywaydb.core.Flyway;
-import org.flywaydb.core.internal.util.ExceptionUtils;
-import org.flywaydb.core.internal.util.Location;
-import org.flywaydb.core.internal.util.StringUtils;
-import org.flywaydb.core.internal.util.jdbc.DriverDataSource;
-import org.flywaydb.core.api.logging.Log;
-import org.flywaydb.core.api.logging.LogFactory;
-
-import javax.sql.DataSource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +22,21 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.sql.DataSource;
+
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.logging.Log;
+import org.flywaydb.core.api.logging.LogFactory;
+import org.flywaydb.core.internal.util.ExceptionUtils;
+import org.flywaydb.core.internal.util.Location;
+import org.flywaydb.core.internal.util.StringUtils;
+import org.flywaydb.core.internal.util.jdbc.DriverDataSource;
 
 /**
  * Base class for all Flyway Ant tasks.
@@ -60,8 +61,7 @@ public abstract class AbstractFlywayTask extends Task {
     private Path classPath;
 
     /**
-     * The fully qualified classname of the jdbc driver to use to connect to the database.<br>Also configurable with Ant Property:
-     * ${flyway.driver}
+     * The fully qualified classname of the jdbc driver to use to connect to the database.<br>Also configurable with Ant Property: ${flyway.driver}
      */
     private String driver;
 
@@ -71,8 +71,8 @@ public abstract class AbstractFlywayTask extends Task {
     private String url;
 
     /**
-     * The user to use to connect to the database. (default: <i>blank</i>)<br>Also configurable with Ant Property: ${flyway.user}<br>
-     * The credentials can be specified by user/password or serverId from settings.xml
+     * The user to use to connect to the database. (default: <i>blank</i>)<br>Also configurable with Ant Property: ${flyway.user}<br> The credentials can be
+     * specified by user/password or serverId from settings.xml
      */
     private String user;
 
@@ -82,21 +82,19 @@ public abstract class AbstractFlywayTask extends Task {
     private String password;
 
     /**
-     * Locations on the classpath to scan recursively for migrations. Locations may contain both sql
-     * and java-based migrations. (default: db.migration)<br>Also configurable with Ant Property: ${flyway.locations}
+     * Locations on the classpath to scan recursively for migrations. Locations may contain both sql and java-based migrations. (default: db.migration)<br>Also
+     * configurable with Ant Property: ${flyway.locations}
      */
     private String[] locations;
 
     /**
-     * The custom MigrationResolvers to be used in addition or as replacement to the built-in (as determined by the
-     * skipDefaultResolvers property) ones for resolving Migrations to apply.
-     * <p>(default: none)</p>
+     * The custom MigrationResolvers to be used in addition or as replacement to the built-in (as determined by the skipDefaultResolvers property) ones for
+     * resolving Migrations to apply. <p>(default: none)</p>
      */
     private String[] resolvers;
 
     /**
-     * The callbacks for lifecycle notifications.
-     * <p>(default: none)</p>
+     * The callbacks for lifecycle notifications. <p>(default: none)</p>
      */
     private String[] callbacks;
 
@@ -119,16 +117,15 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param classpath The classpath used to load the JDBC driver and the migrations.<br>Also configurable with Ant
-     *                  Property: ${flyway.classpath}
+     * @param classpath The classpath used to load the JDBC driver and the migrations.<br>Also configurable with Ant Property: ${flyway.classpath}
      */
     public void setClasspath(Path classpath) {
         this.classPath = classpath;
     }
 
     /**
-     * @param classpathref The reference to the classpath used to load the JDBC driver and the migrations.<br>Also
-     *                     configurable with Ant Property: ${flyway.classpathref}
+     * @param classpathref The reference to the classpath used to load the JDBC driver and the migrations.<br>Also configurable with Ant Property:
+     *                     ${flyway.classpathref}
      */
     public void setClasspathref(Reference classpathref) {
         Path classPath = new Path(getProject());
@@ -137,9 +134,8 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param driver The fully qualified classname of the jdbc driver to use to connect to the database.<br>
-     *               By default, the driver is autodetected based on the url.<br>
-     *               Also configurable with Ant Property: ${flyway.driver}
+     * @param driver The fully qualified classname of the jdbc driver to use to connect to the database.<br> By default, the driver is autodetected based on the
+     *               url.<br> Also configurable with Ant Property: ${flyway.driver}
      */
     public void setDriver(String driver) {
         this.driver = driver;
@@ -167,82 +163,75 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param schemas Comma-separated list of the schemas managed by Flyway. These schema names are case-sensitive.<br>
-     *                (default: The default schema for the datasource connection)
-     *                <p>Consequences:</p>
-     *                <ul>
-     *                <li>The first schema in the list will be automatically set as the default one during the migration.</li>
-     *                <li>The first schema in the list will also be the one containing the metadata table.</li>
-     *                <li>The schemas will be cleaned in the order of this list.</li>
-     *                </ul>Also configurable with Ant Property:
-     *                ${flyway.schemas}
+     * @param schemas Comma-separated list of the schemas managed by Flyway. These schema names are case-sensitive.<br> (default: The default schema for the
+     *                datasource connection) <p>Consequences:</p> <ul> <li>The first schema in the list will be automatically set as the default one during the
+     *                migration.</li> <li>The first schema in the list will also be the one containing the metadata table.</li> <li>The schemas will be cleaned
+     *                in the order of this list.</li> </ul>Also configurable with Ant Property: ${flyway.schemas}
      */
     public void setSchemas(String schemas) {
         flyway.setSchemas(StringUtils.tokenizeToStringArray(schemas, ","));
     }
 
     /**
-     * @param resolvers The custom MigrationResolvers to be used in addition to the built-in ones for resolving Migrations to apply.
-     *                  <p>(default: none)</p>
+     * @param resolvers The custom MigrationResolvers to be used in addition to the built-in ones for resolving Migrations to apply. <p>(default: none)</p>
      */
     public void setResolvers(String resolvers) {
         this.resolvers = StringUtils.tokenizeToStringArray(resolvers, ",");
     }
 
     /**
-     * @param skipDefaultResolvers Whether built-int resolvers should be skipped.
-     *                             If true, only custom resolvers are used.<p>(default: false)</p>
-     *                             <br>Also configurable with Ant Property: ${flyway.skipDefaultResolvers}
+     * @param skipDefaultResolvers Whether built-int resolvers should be skipped. If true, only custom resolvers are used.<p>(default: false)</p> <br>Also
+     *                             configurable with Ant Property: ${flyway.skipDefaultResolvers}
      */
     public void setSkipDefaultResolvers(boolean skipDefaultResolvers) {
         flyway.setSkipDefaultResolvers(skipDefaultResolvers);
     }
 
     /**
-     * @param callbacks A comma-separated list of fully qualified FlywayCallback implementation class names.  These classes
-     *                  will be instantiated and wired into the Flyway lifecycle notification events.
+     * @param callbacks A comma-separated list of fully qualified FlywayCallback implementation class names.  These classes will be instantiated and wired into
+     *                  the Flyway lifecycle notification events.
      */
     public void setCallbacks(String callbacks) {
         this.callbacks = StringUtils.tokenizeToStringArray(callbacks, ",");
     }
 
     /**
-     * @param skipDefaultCallbacks Whether built-int callbacks should be skipped.
-     *                             If true, only custom callbacks are used.<p>(default: false)</p>
-     *                             <br>Also configurable with Ant Property: ${flyway.skipDefaultCallbacks}
+     * @param skipDefaultCallbacks Whether built-int callbacks should be skipped. If true, only custom callbacks are used.<p>(default: false)</p> <br>Also
+     *                             configurable with Ant Property: ${flyway.skipDefaultCallbacks}
      */
     public void setSkipDefaultCallbacks(boolean skipDefaultCallbacks) {
         flyway.setSkipDefaultCallbacks(skipDefaultCallbacks);
     }
 
     /**
-     * @param table <p>The name of the schema metadata table that will be used by Flyway.</p><p> By default (single-schema mode) the
-     *              metadata table is placed in the default schema for the connection provided by the datasource. </p> <p> When the
-     *              <i>flyway.schemas</i> property is set (multi-schema mode), the metadata table is placed in the first schema of
-     *              the list. </p> (default: schema_version)<br>Also configurable with Ant Property: ${flyway.table}
+     * @param table <p>The name of the schema metadata table that will be used by Flyway.</p><p> By default (single-schema mode) the metadata table is placed in
+     *              the default schema for the connection provided by the datasource. </p> <p> When the <i>flyway.schemas</i> property is set (multi-schema
+     *              mode), the metadata table is placed in the first schema of the list. </p> (default: schema_version)<br>Also configurable with Ant Property:
+     *              ${flyway.table}
      */
     public void setTable(String table) {
         flyway.setTable(table);
     }
 
     /**
-     * @param baselineVersion The version to tag an existing schema with when executing baseline. (default: 1)<br>Also configurable with Ant Property: ${flyway.baselineVersion}
+     * @param baselineVersion The version to tag an existing schema with when executing baseline. (default: 1)<br>Also configurable with Ant Property:
+     *                        ${flyway.baselineVersion}
      */
     public void setBaselineVersion(String baselineVersion) {
         flyway.setBaselineVersionAsString(baselineVersion);
     }
 
     /**
-     * @param baselineDescription The description to tag an existing schema with when executing baseline. (default: &lt;&lt; Flyway Baseline &gt;&gt;)<br>Also configurable with Ant Property:
-     *                            ${flyway.baselineDescription}
+     * @param baselineDescription The description to tag an existing schema with when executing baseline. (default: &lt;&lt; Flyway Baseline &gt;&gt;)<br>Also
+     *                            configurable with Ant Property: ${flyway.baselineDescription}
      */
     public void setBaselineDescription(String baselineDescription) {
         flyway.setBaselineDescription(baselineDescription);
     }
 
     /**
-     * Whether to allow mixing transactional and non-transactional statements within the same migration.<br>
-     * Also configurable with Ant Property: ${flyway.mixed}
+     * Whether to allow mixing transactional and non-transactional statements within the same migration.<br> Also configurable with Ant Property:
+     * ${flyway.mixed}
      *
      * @param mixed {@code true} if mixed migrations should be allowed. {@code false} if an error should be thrown instead. (default: {@code false})
      */
@@ -251,7 +240,8 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * Whether to group all pending migrations together in the same transaction when applying them (only recommended for databases with support for DDL transactions).
+     * Whether to group all pending migrations together in the same transaction when applying them (only recommended for databases with support for DDL
+     * transactions).
      * <p>
      * Also configurable with Ant Property: ${flyway.group}
      *
@@ -262,8 +252,8 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * The username that will be recorded in the metadata table as having applied the migration.
-     * <p>Also configurable with Ant Property: ${flyway.installedBy}</p>
+     * The username that will be recorded in the metadata table as having applied the migration. <p>Also configurable with Ant Property:
+     * ${flyway.installedBy}</p>
      *
      * @param installedBy The username or <i>blank</i> for the current database user of the connection. (default: <i>blank</i>).
      */
@@ -319,8 +309,7 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * Prepares the classpath this task runs in, so that it includes both the classpath for Flyway and the classpath for
-     * the JDBC drivers and migrations.
+     * Prepares the classpath this task runs in, so that it includes both the classpath for Flyway and the classpath for the JDBC drivers and migrations.
      */
     private void prepareClassPath() {
         Path classpath = (Path) getProject().getReference("flyway.classpath");
@@ -382,8 +371,8 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix ,
-     * which using the defaults translates to V1_1__My_description.sql</p>
+     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix , which using the defaults translates to
+     * V1_1__My_description.sql</p>
      *
      * @param sqlMigrationPrefix The file name prefix for Sql migrations (default: V)<br>Also configurable with Ant Property: ${flyway.sqlMigrationPrefix}
      */
@@ -392,79 +381,79 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * <p>Repeatable sql migrations have the following file name structure: prefixSeparatorDESCRIPTIONsuffix ,
-     * which using the defaults translates to R__My_description.sql</p>
+     * <p>Repeatable sql migrations have the following file name structure: prefixSeparatorDESCRIPTIONsuffix , which using the defaults translates to
+     * R__My_description.sql</p>
      *
-     * @param repeatableSqlMigrationPrefix The file name prefix for repeatable sql migrations (default: R)<br>Also configurable with Ant Property: ${flyway.repeatableSqlMigrationPrefix}
+     * @param repeatableSqlMigrationPrefix The file name prefix for repeatable sql migrations (default: R)<br>Also configurable with Ant Property:
+     *                                     ${flyway.repeatableSqlMigrationPrefix}
      */
     public void setRepeatableSqlMigrationPrefix(String repeatableSqlMigrationPrefix) {
         flyway.setRepeatableSqlMigrationPrefix(repeatableSqlMigrationPrefix);
     }
 
     /**
-     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix ,
-     * which using the defaults translates to V1_1__My_description.sql</p>
+     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix , which using the defaults translates to
+     * V1_1__My_description.sql</p>
      *
-     * @param sqlMigrationSeparator The file name separator for Sql migrations (default: V)<br>Also configurable with Ant Property: ${flyway.sqlMigrationPrefix}
+     * @param sqlMigrationSeparator The file name separator for Sql migrations (default: V)<br>Also configurable with Ant Property:
+     *                              ${flyway.sqlMigrationPrefix}
      */
     public void setSqlMigrationSeparator(String sqlMigrationSeparator) {
         flyway.setSqlMigrationSeparator(sqlMigrationSeparator);
     }
 
     /**
-     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix ,
-     * which using the defaults translates to V1_1__My_description.sql</p>
-     * <p>Multiple suffixes (like .sql,.pkg,.pkb) can be specified for easier compatibility with other tools such as
-     * editors with specific file associations.</p>
+     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix , which using the defaults translates to
+     * V1_1__My_description.sql</p> <p>Multiple suffixes (like .sql,.pkg,.pkb) can be specified for easier compatibility with other tools such as editors with
+     * specific file associations.</p>
      *
-     * @param sqlMigrationSuffixes The file name suffixes for SQL migrations, comma-separated. (default: .sql)<br>Also configurable with Ant Property: ${flyway.sqlMigrationSuffixes}
+     * @param sqlMigrationSuffixes The file name suffixes for SQL migrations, comma-separated. (default: .sql)<br>Also configurable with Ant Property:
+     *                             ${flyway.sqlMigrationSuffixes}
      */
     public void setSqlMigrationSuffixes(String sqlMigrationSuffixes) {
         flyway.setSqlMigrationSuffixes(StringUtils.tokenizeToStringArray(sqlMigrationSuffixes, ","));
     }
 
     /**
-     * @param target The target version up to which Flyway should consider migrations.
-     *               Migrations with a higher version number will be ignored.
-     *               The special value {@code current} designates the current version of the schema. (default: the latest version)<br>Also configurable with Ant Property: ${flyway.target}
+     * @param target The target version up to which Flyway should consider migrations. Migrations with a higher version number will be ignored. The special
+     *               value {@code current} designates the current version of the schema. (default: the latest version)<br>Also configurable with Ant Property:
+     *               ${flyway.target}
      */
     public void setTarget(String target) {
         flyway.setTargetAsString(target);
     }
 
     /**
-     * @param cleanOnValidationError Whether to automatically call clean or not when a validation error occurs. (default: {@code false})<br>
-     *                               <p> This is exclusively intended as a convenience for development. Even tough we
-     *                               strongly recommend not to change migration scripts once they have been checked into SCM and run, this provides a
-     *                               way of dealing with this case in a smooth manner. The database will be wiped clean automatically, ensuring that
-     *                               the next migration will bring you back to the state checked into SCM.</p>
-     *                               <p><b>Warning ! Do not enable in production !</b></p>
-     *                               <br>Also configurable with Ant Property: ${flyway.cleanOnValidationError}
+     * @param cleanOnValidationError Whether to automatically call clean or not when a validation error occurs. (default: {@code false})<br> <p> This is
+     *                               exclusively intended as a convenience for development. Even tough we strongly recommend not to change migration scripts
+     *                               once they have been checked into SCM and run, this provides a way of dealing with this case in a smooth manner. The
+     *                               database will be wiped clean automatically, ensuring that the next migration will bring you back to the state checked into
+     *                               SCM.</p> <p><b>Warning ! Do not enable in production !</b></p> <br>Also configurable with Ant Property:
+     *                               ${flyway.cleanOnValidationError}
      */
     public void setCleanOnValidationError(boolean cleanOnValidationError) {
         flyway.setCleanOnValidationError(cleanOnValidationError);
     }
 
     /**
-     * @param cleanDisabled Whether to disable clean. (default: {@code false})
-     *                      <p>This is especially useful for production environments where running clean can be quite a career limiting move.</p>
+     * @param cleanDisabled Whether to disable clean. (default: {@code false}) <p>This is especially useful for production environments where running clean can
+     *                      be quite a career limiting move.</p>
      */
     public void setCleanDisabled(boolean cleanDisabled) {
         flyway.setCleanDisabled(cleanDisabled);
     }
 
     /**
-     * @param outOfOrder Allows migrations to be run "out of order" (default: {@code false}).
-     *                   <p>If you already have versions 1 and 3 applied, and now a version 2 is found,
-     *                   it will be applied too instead of being ignored.</p>
-     *                   Also configurable with Ant Property: ${flyway.outOfOrder}
+     * @param outOfOrder Allows migrations to be run "out of order" (default: {@code false}). <p>If you already have versions 1 and 3 applied, and now a version
+     *                   2 is found, it will be applied too instead of being ignored.</p> Also configurable with Ant Property: ${flyway.outOfOrder}
      */
     public void setOutOfOrder(boolean outOfOrder) {
         flyway.setOutOfOrder(outOfOrder);
     }
 
     /**
-     * @param placeholderReplacement Whether placeholders should be replaced. (default: true)<br>Also configurable with Ant Property: ${flyway.placeholderReplacement}
+     * @param placeholderReplacement Whether placeholders should be replaced. (default: true)<br>Also configurable with Ant Property:
+     *                               ${flyway.placeholderReplacement}
      */
     public void setPlaceholderReplacement(boolean placeholderReplacement) {
         flyway.setPlaceholderReplacement(placeholderReplacement);
@@ -494,58 +483,46 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * Ignore missing migrations when reading the metadata table. These are migrations that were performed by an
-     * older deployment of the application that are no longer available in this version. For example: we have migrations
-     * available on the classpath with versions 1.0 and 3.0. The metadata table indicates that a migration with version 2.0
-     * (unknown to us) has also been applied. Instead of bombing out (fail fast) with an exception, a
-     * warning is logged and Flyway continues normally. This is useful for situations where one must be able to deploy
-     * a newer version of the application even though it doesn't contain migrations included with an older one anymore.
+     * Ignore missing migrations when reading the metadata table. These are migrations that were performed by an older deployment of the application that are no
+     * longer available in this version. For example: we have migrations available on the classpath with versions 1.0 and 3.0. The metadata table indicates that
+     * a migration with version 2.0 (unknown to us) has also been applied. Instead of bombing out (fail fast) with an exception, a warning is logged and Flyway
+     * continues normally. This is useful for situations where one must be able to deploy a newer version of the application even though it doesn't contain
+     * migrations included with an older one anymore.
      *
-     * @param ignoreMissingMigrations {@code true} to continue normally and log a warning, {@code false} to fail fast with an exception.
-     *                                (default: {@code false})
+     * @param ignoreMissingMigrations {@code true} to continue normally and log a warning, {@code false} to fail fast with an exception. (default: {@code
+     *                                false})
      */
     public void setIgnoreMissingMigrations(boolean ignoreMissingMigrations) {
         flyway.setIgnoreMissingMigrations(ignoreMissingMigrations);
     }
 
     /**
-     * Whether to ignore future migrations when reading the metadata table. These are migrations that were performed by a
-     * newer deployment of the application that are not yet available in this version. For example: we have migrations
-     * available on the classpath up to version 3.0. The metadata table indicates that a migration to version 4.0
-     * (unknown to us) has already been applied. Instead of bombing out (fail fast) with an exception, a
-     * warning is logged and Flyway continues normally. This is useful for situations where one must be able to redeploy
-     * an older version of the application after the database has been migrated by a newer one.
-     * <br>Also configurable with Ant Property: ${flyway.ignoreFutureMigrations}
+     * Whether to ignore future migrations when reading the metadata table. These are migrations that were performed by a newer deployment of the application
+     * that are not yet available in this version. For example: we have migrations available on the classpath up to version 3.0. The metadata table indicates
+     * that a migration to version 4.0 (unknown to us) has already been applied. Instead of bombing out (fail fast) with an exception, a warning is logged and
+     * Flyway continues normally. This is useful for situations where one must be able to redeploy an older version of the application after the database has
+     * been migrated by a newer one. <br>Also configurable with Ant Property: ${flyway.ignoreFutureMigrations}
      *
-     * @param ignoreFutureMigrations {@code true} to continue normally and log a warning, {@code false} to fail
-     *                               fast with an exception. (default: {@code true})
+     * @param ignoreFutureMigrations {@code true} to continue normally and log a warning, {@code false} to fail fast with an exception. (default: {@code true})
      */
     public void setIgnoreFutureMigrations(boolean ignoreFutureMigrations) {
         flyway.setIgnoreFutureMigrations(ignoreFutureMigrations);
     }
 
     /**
-     * @param validateOnMigrate Whether to automatically call validate or not when running migrate. (default: {@code true})<br>
-     *                          Also configurable with Ant Property: ${flyway.validateOnMigrate}
+     * @param validateOnMigrate Whether to automatically call validate or not when running migrate. (default: {@code true})<br> Also configurable with Ant
+     *                          Property: ${flyway.validateOnMigrate}
      */
     public void setValidateOnMigrate(boolean validateOnMigrate) {
         flyway.setValidateOnMigrate(validateOnMigrate);
     }
 
     /**
-     * <p>
-     * Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table.
-     * This schema will then be baselined with the {@code initialVersion} before executing the migrations.
-     * Only migrations above {@code initialVersion} will then be applied.
-     * </p>
-     * <p>
-     * This is useful for initial Flyway production deployments on projects with an existing DB.
-     * </p>
-     * <p>
-     * Be careful when enabling this as it removes the safety net that ensures
-     * Flyway does not migrate the wrong database in case of a configuration mistake!
-     * </p>
-     * Also configurable with Ant Property: ${flyway.baselineOnMigrate}
+     * <p> Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be baselined
+     * with the {@code initialVersion} before executing the migrations. Only migrations above {@code initialVersion} will then be applied. </p> <p> This is
+     * useful for initial Flyway production deployments on projects with an existing DB. </p> <p> Be careful when enabling this as it removes the safety net
+     * that ensures Flyway does not migrate the wrong database in case of a configuration mistake! </p> Also configurable with Ant Property:
+     * ${flyway.baselineOnMigrate}
      *
      * @param baselineOnMigrate {@code true} if baseline should be called on migrate for non-empty schemas, {@code false} if not. (default: {@code false})
      */
