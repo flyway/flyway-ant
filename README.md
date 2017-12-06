@@ -6,7 +6,7 @@ Flyway Ant plugin provided as an AntLib.
 
 ```
 <dependency>
-    <groupId>org.flywaydb.ant</groupId>
+    <groupId>cz.net21.flyway.ant</groupId>
     <artifactId>flyway-ant</artifactId>
     <version>0-SNAPSHOT</version>
 </dependency>
