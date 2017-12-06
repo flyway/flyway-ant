@@ -25,7 +25,7 @@ public class AbstractFlywayTaskTest {
 
     @Test
     public void adjustRelativeFileSystemLocationToBaseDir() {
-        String root = File.listRoots()[0].getPath();
+        String root = File.listRoots()[0].getPath().toLowerCase();
 
         File baseDir = new File("/tempo");
         assertEquals("db/migration",
