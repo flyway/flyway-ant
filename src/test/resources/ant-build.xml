@@ -1,16 +1,33 @@
 <project name="FlywayAntPluginTest" xmlns:flyway="antlib:org.flywaydb.ant">
 
-    <path id="flyway.lib.path" /><!-- flyway and h2 libs already on the classpath -->
+    <path id="flyway.lib.path"/><!-- flyway and h2 libs already on the classpath -->
 
     <taskdef uri="antlib:org.flywaydb.ant" resource="org/flywaydb/ant/antlib.xml"
              classpathref="flyway.lib.path"/>
 
     <target name="migrate-test" depends="-set-parameters">
-        <flyway:migrate />
+        <flyway:migrate/>
+    </target>
+
+    <target name="clean-test" depends="-set-parameters">
+        <flyway:clean/>
     </target>
 
     <target name="info-test" depends="-set-parameters">
-        <flyway:info />
+        <flyway:info/>
+    </target>
+
+    <target name="validate-test" depends="-set-parameters">
+        <flyway:migrate/>
+        <flyway:validate/>
+    </target>
+
+    <target name="baseline-test" depends="-set-parameters">
+        <flyway:baseline/>
+    </target>
+
+    <target name="repair-test" depends="-set-parameters">
+        <flyway:repair/>
     </target>
 
     <target name="-check-db">

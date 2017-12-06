@@ -16,10 +16,8 @@ abstract class AbstractAntTest {
 
     abstract protected BuildFileRule getBuildFileRule();
 
-    abstract protected String getTargetName();
-
-    protected String execute() {
-        getBuildFileRule().executeTarget(getTargetName());
+    protected String execute(String targetName) {
+        getBuildFileRule().executeTarget(targetName);
         return getBuildFileRule().getLog();
     }
 }

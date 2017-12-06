@@ -9,9 +9,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-public class MigrateTaskTest extends AbstractAntTest {
+public class RepairTaskTest extends AbstractAntTest {
 
-    private static final String TARGET_NAME = "migrate-test";
+    private static final String TARGET_NAME = "repair-test";
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
@@ -31,15 +31,6 @@ public class MigrateTaskTest extends AbstractAntTest {
     @Test
     public void basicTest() {
         String log = execute(TARGET_NAME);
-        AntAssert.assertContains("Successfully validated 1 migration", log);
-    }
-
-    @Test
-    public void noMigrationsTest() {
-        // there are no migrations with such a suffix
-        buildRule.getProject().setProperty("flyway.sqlMigrationSuffixes", ".xxx");
-
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("No migrations found", log);
+        AntAssert.assertContains("Successfully repaired schema history table", log);
     }
 }
