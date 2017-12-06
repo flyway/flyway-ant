@@ -5,8 +5,12 @@
     <taskdef uri="antlib:org.flywaydb.ant" resource="org/flywaydb/ant/antlib.xml"
              classpathref="flyway.lib.path"/>
 
-    <target name="migrate-test" depends="-check-db">
-        <flyway:migrate driver="org.h2.Driver" url="jdbc:h2:${db}" user="sa" password="" />
+    <target name="migrate-test" depends="-set-parameters">
+        <flyway:migrate />
+    </target>
+
+    <target name="info-test" depends="-set-parameters">
+        <flyway:info />
     </target>
 
     <target name="-check-db">
@@ -17,6 +21,12 @@
                 </not>
             </condition>
         </fail>
+    </target>
+
+    <target name="-set-parameters" depends="-check-db">
+        <property name="flyway.url" value="jdbc:h2:${db}"/>
+        <property name="flyway.user" value="sa"/>
+        <property name="flyway.password" value=""/>
     </target>
 
 </project>
