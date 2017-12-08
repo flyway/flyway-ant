@@ -91,6 +91,10 @@ ant -Dflyway.user=myUser -Dflyway.schemas=schema1,schema2 -Dflyway.placeholders.
 
 System properties *override* Ant properties *override* Task attributes.
 
+## Documentation 
+
+For more details see the [Wiki pages](https://github.com/flyway/flyway-ant/wiki).
+
 ## License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
