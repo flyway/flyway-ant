@@ -25,16 +25,16 @@ public class AbstractFlywayTaskTest {
 
     @Test
     public void adjustRelativeFileSystemLocationToBaseDir() {
-        String root = File.listRoots()[0].getPath();
+        String root = File.listRoots()[0].getPath().toLowerCase();
 
         File baseDir = new File("/tempo");
         assertEquals("db/migration",
-                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "db/migration"));
+                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "db/migration").toLowerCase());
 
         assertEquals("filesystem:" + root + "test/migration",
-                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:" + root + "test/migration"));
+                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:" + root + "test/migration").toLowerCase());
 
         assertEquals("filesystem:" + root + "tempo/test/migration",
-                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:test/migration"));
+                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:test/migration").toLowerCase());
     }
 }
