@@ -31,10 +31,10 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.Location;
 import org.flywaydb.core.api.logging.Log;
 import org.flywaydb.core.api.logging.LogFactory;
 import org.flywaydb.core.internal.util.ExceptionUtils;
-import org.flywaydb.core.internal.util.Location;
 import org.flywaydb.core.internal.util.StringUtils;
 import org.flywaydb.core.internal.util.jdbc.DriverDataSource;
 
@@ -112,8 +112,16 @@ public abstract class AbstractFlywayTask extends Task {
 
     AbstractFlywayTask(Flyway flyway) {
         this.flyway = flyway;
-        this.locations = flyway.getLocations();
+        this.locations = locationsToStrings(flyway.getLocations());
         this.placeholders = flyway.getPlaceholders();
+    }
+
+    private String[] locationsToStrings(Location[] locations) {
+        String[] locationsString = new String[locations.length];
+        for (int i = 0; i < locations.length; i++) {
+            locationsString[i] = locations[i].getDescriptor();
+        }
+        return locationsString;
     }
 
     /**
@@ -582,7 +590,7 @@ public abstract class AbstractFlywayTask extends Task {
         String[] locationsVal = locations;
         String locationsProperty = getProject().getProperty("flyway.locations");
         if (locationsProperty != null) {
-            locationsVal = StringUtils.tokenizeToStringArray(locationsProperty, ",");
+            String[] locationsString = StringUtils.tokenizeToStringArray(locationsProperty, ",");
         }
 
         //Adjust relative locations to be relative from Ant's basedir.

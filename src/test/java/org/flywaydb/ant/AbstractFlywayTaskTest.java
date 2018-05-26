@@ -34,7 +34,7 @@ public class AbstractFlywayTaskTest {
         assertEquals("filesystem:" + root + "test/migration",
                      AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:" + root + "test/migration").toLowerCase());
 
-        assertEquals("filesystem:" + root + "tempo/test/migration",
+        assertEquals("filesystem:" + root + "tempo/test" + File.separator + "migration",
                      AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:test/migration").toLowerCase());
     }
 }

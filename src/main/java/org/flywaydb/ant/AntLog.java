@@ -23,6 +23,7 @@ import org.flywaydb.core.api.logging.Log;
  * Wrapper around an Ant Logger.
  */
 public class AntLog implements Log {
+
     public void debug(String message) {
         Project antProject = AntLogCreator.INSTANCE.getAntProject();
         Task task = antProject.getThreadTask(Thread.currentThread());
@@ -51,5 +52,9 @@ public class AntLog implements Log {
         Project antProject = AntLogCreator.INSTANCE.getAntProject();
         Task task = antProject.getThreadTask(Thread.currentThread());
         antProject.log(task, message, e, Project.MSG_ERR);
+    }
+
+    public boolean isDebugEnabled() {
+        return true;
     }
 }
