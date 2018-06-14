@@ -590,7 +590,7 @@ public abstract class AbstractFlywayTask extends Task {
         String[] locationsVal = locations;
         String locationsProperty = getProject().getProperty("flyway.locations");
         if (locationsProperty != null) {
-            String[] locationsString = StringUtils.tokenizeToStringArray(locationsProperty, ",");
+            locationsVal = StringUtils.tokenizeToStringArray(locationsProperty, ",");
         }
 
         //Adjust relative locations to be relative from Ant's basedir.
