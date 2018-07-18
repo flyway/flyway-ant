@@ -136,10 +136,6 @@ public abstract class AbstractFlywayTask extends Task {
     private Boolean validateOnMigrate;
     private Boolean baselineOnMigrate;
 
-    public AbstractFlywayTask() {
-        System.out.println("aaa");
-    }
-
     private String[] locationsToStrings(Location[] locations) {
         String[] locationsString = new String[locations.length];
         for (int i = 0; i < locations.length; i++) {
