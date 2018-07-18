@@ -106,6 +106,40 @@ public abstract class AbstractFlywayTask extends Task {
      */
     private Map<String, String> placeholders;
 
+    /**
+     * Follow Flyway Core properties...
+     */
+    private String[] schemas;
+    private Boolean skipDefaultResolvers;
+    private Boolean skipDefaultCallbacks;
+    private String table;
+    private String baselineVersion;
+    private String baselineDescription;
+    private Boolean mixed;
+    private Boolean group;
+    private String installedBy;
+    private SchemasElement schemasElement;
+    private String encoding;
+    private String sqlMigrationPrefix;
+    private String repeatableSqlMigrationPrefix;
+    private String sqlMigrationSeparator;
+    private String[] sqlMigrationSuffixes;
+    private String target;
+    private Boolean cleanOnValidationError;
+    private Boolean cleanDisabled;
+    private Boolean outOfOrder;
+    private Boolean placeholderReplacement;
+    private String placeholderPrefix;
+    private String placeholderSuffix;
+    private Boolean ignoreMissingMigrations;
+    private Boolean ignoreFutureMigrations;
+    private Boolean validateOnMigrate;
+    private Boolean baselineOnMigrate;
+
+    public AbstractFlywayTask() {
+        System.out.println("aaa");
+    }
+
     private String[] locationsToStrings(Location[] locations) {
         String[] locationsString = new String[locations.length];
         for (int i = 0; i < locations.length; i++) {
@@ -167,7 +201,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                in the order of this list.</li> </ul>Also configurable with Ant Property: ${flyway.schemas}
      */
     public void setSchemas(String schemas) {
-        flyway.setSchemas(StringUtils.tokenizeToStringArray(schemas, ","));
+        this.schemas = StringUtils.tokenizeToStringArray(schemas, ",");
     }
 
     /**
@@ -182,7 +216,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                             configurable with Ant Property: ${flyway.skipDefaultResolvers}
      */
     public void setSkipDefaultResolvers(boolean skipDefaultResolvers) {
-        flyway.setSkipDefaultResolvers(skipDefaultResolvers);
+        this.skipDefaultResolvers = skipDefaultResolvers;
     }
 
     /**
@@ -198,7 +232,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                             configurable with Ant Property: ${flyway.skipDefaultCallbacks}
      */
     public void setSkipDefaultCallbacks(boolean skipDefaultCallbacks) {
-        flyway.setSkipDefaultCallbacks(skipDefaultCallbacks);
+        this.skipDefaultCallbacks = skipDefaultCallbacks;
     }
 
     /**
@@ -208,7 +242,7 @@ public abstract class AbstractFlywayTask extends Task {
      *              ${flyway.table}
      */
     public void setTable(String table) {
-        flyway.setTable(table);
+        this.table = table;
     }
 
     /**
@@ -216,7 +250,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                        ${flyway.baselineVersion}
      */
     public void setBaselineVersion(String baselineVersion) {
-        flyway.setBaselineVersionAsString(baselineVersion);
+        this.baselineVersion = baselineVersion;
     }
 
     /**
@@ -224,7 +258,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                            configurable with Ant Property: ${flyway.baselineDescription}
      */
     public void setBaselineDescription(String baselineDescription) {
-        flyway.setBaselineDescription(baselineDescription);
+        this.baselineDescription = baselineDescription;
     }
 
     /**
@@ -234,7 +268,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param mixed {@code true} if mixed migrations should be allowed. {@code false} if an error should be thrown instead. (default: {@code false})
      */
     public void setMixed(boolean mixed) {
-        flyway.setMixed(mixed);
+        this.mixed = mixed;
     }
 
     /**
@@ -246,7 +280,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param group {@code true} if migrations should be grouped. {@code false} if they should be applied individually instead. (default: {@code false})
      */
     public void setGroup(boolean group) {
-        flyway.setGroup(group);
+        this.group = group;
     }
 
     /**
@@ -256,7 +290,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param installedBy The username or <i>blank</i> for the current database user of the connection. (default: <i>blank</i>).
      */
     public void setInstalledBy(String installedBy) {
-        flyway.setInstalledBy(installedBy);
+        this.installedBy = installedBy;
     }
 
     /**
@@ -357,14 +391,14 @@ public abstract class AbstractFlywayTask extends Task {
      * @param schemasElement The schemas.
      */
     public void addConfiguredSchemas(SchemasElement schemasElement) {
-        flyway.setSchemas(schemasElement.schemas.toArray(new String[schemasElement.schemas.size()]));
+        this.schemas = schemasElement.schemas.toArray(new String[schemasElement.schemas.size()]);
     }
 
     /**
      * @param encoding The encoding of Sql migrations. (default: UTF-8)<br>Also configurable with Ant Property: ${flyway.encoding}
      */
     public void setEncoding(String encoding) {
-        flyway.setEncoding(encoding);
+        this.encoding = encoding;
     }
 
     /**
@@ -374,7 +408,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param sqlMigrationPrefix The file name prefix for Sql migrations (default: V)<br>Also configurable with Ant Property: ${flyway.sqlMigrationPrefix}
      */
     public void setSqlMigrationPrefix(String sqlMigrationPrefix) {
-        flyway.setSqlMigrationPrefix(sqlMigrationPrefix);
+        this.sqlMigrationPrefix = sqlMigrationPrefix;
     }
 
     /**
@@ -385,7 +419,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                                     ${flyway.repeatableSqlMigrationPrefix}
      */
     public void setRepeatableSqlMigrationPrefix(String repeatableSqlMigrationPrefix) {
-        flyway.setRepeatableSqlMigrationPrefix(repeatableSqlMigrationPrefix);
+        this.repeatableSqlMigrationPrefix = repeatableSqlMigrationPrefix;
     }
 
     /**
@@ -396,7 +430,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                              ${flyway.sqlMigrationPrefix}
      */
     public void setSqlMigrationSeparator(String sqlMigrationSeparator) {
-        flyway.setSqlMigrationSeparator(sqlMigrationSeparator);
+        this.sqlMigrationSeparator = sqlMigrationSeparator;
     }
 
     /**
@@ -408,7 +442,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                             ${flyway.sqlMigrationSuffixes}
      */
     public void setSqlMigrationSuffixes(String sqlMigrationSuffixes) {
-        flyway.setSqlMigrationSuffixes(StringUtils.tokenizeToStringArray(sqlMigrationSuffixes, ","));
+        this.sqlMigrationSuffixes = StringUtils.tokenizeToStringArray(sqlMigrationSuffixes, ",");
     }
 
     /**
@@ -417,7 +451,7 @@ public abstract class AbstractFlywayTask extends Task {
      *               ${flyway.target}
      */
     public void setTarget(String target) {
-        flyway.setTargetAsString(target);
+        this.target = target;
     }
 
     /**
@@ -429,7 +463,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                               ${flyway.cleanOnValidationError}
      */
     public void setCleanOnValidationError(boolean cleanOnValidationError) {
-        flyway.setCleanOnValidationError(cleanOnValidationError);
+        this.cleanOnValidationError = cleanOnValidationError;
     }
 
     /**
@@ -437,7 +471,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                      be quite a career limiting move.</p>
      */
     public void setCleanDisabled(boolean cleanDisabled) {
-        flyway.setCleanDisabled(cleanDisabled);
+        this.cleanDisabled = cleanDisabled;
     }
 
     /**
@@ -445,7 +479,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                   2 is found, it will be applied too instead of being ignored.</p> Also configurable with Ant Property: ${flyway.outOfOrder}
      */
     public void setOutOfOrder(boolean outOfOrder) {
-        flyway.setOutOfOrder(outOfOrder);
+        this.outOfOrder = outOfOrder;
     }
 
     /**
@@ -453,21 +487,21 @@ public abstract class AbstractFlywayTask extends Task {
      *                               ${flyway.placeholderReplacement}
      */
     public void setPlaceholderReplacement(boolean placeholderReplacement) {
-        flyway.setPlaceholderReplacement(placeholderReplacement);
+        this.placeholderReplacement = placeholderReplacement;
     }
 
     /**
      * @param placeholderPrefix The prefix of every placeholder. (default: ${ )<br>Also configurable with Ant Property: ${flyway.placeholderPrefix}
      */
     public void setPlaceholderPrefix(String placeholderPrefix) {
-        flyway.setPlaceholderPrefix(placeholderPrefix);
+        this.placeholderPrefix = placeholderPrefix;
     }
 
     /**
      * @param placeholderSuffix The suffix of every placeholder. (default: } )<br>Also configurable with Ant Property: ${flyway.placeholderSuffix}
      */
     public void setPlaceholderSuffix(String placeholderSuffix) {
-        flyway.setPlaceholderSuffix(placeholderSuffix);
+        this.placeholderSuffix = placeholderSuffix;
     }
 
     /**
@@ -490,7 +524,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                                false})
      */
     public void setIgnoreMissingMigrations(boolean ignoreMissingMigrations) {
-        flyway.setIgnoreMissingMigrations(ignoreMissingMigrations);
+        this.ignoreMissingMigrations = ignoreMissingMigrations;
     }
 
     /**
@@ -503,7 +537,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param ignoreFutureMigrations {@code true} to continue normally and log a warning, {@code false} to fail fast with an exception. (default: {@code true})
      */
     public void setIgnoreFutureMigrations(boolean ignoreFutureMigrations) {
-        flyway.setIgnoreFutureMigrations(ignoreFutureMigrations);
+        this.ignoreFutureMigrations = ignoreFutureMigrations;
     }
 
     /**
@@ -511,7 +545,7 @@ public abstract class AbstractFlywayTask extends Task {
      *                          Property: ${flyway.validateOnMigrate}
      */
     public void setValidateOnMigrate(boolean validateOnMigrate) {
-        flyway.setValidateOnMigrate(validateOnMigrate);
+        this.validateOnMigrate = validateOnMigrate;
     }
 
     /**
@@ -524,7 +558,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param baselineOnMigrate {@code true} if baseline should be called on migrate for non-empty schemas, {@code false} if not. (default: {@code false})
      */
     public void setBaselineOnMigrate(boolean baselineOnMigrate) {
-        flyway.setBaselineOnMigrate(baselineOnMigrate);
+        this.baselineOnMigrate = baselineOnMigrate;
     }
 
     @Override
@@ -535,9 +569,9 @@ public abstract class AbstractFlywayTask extends Task {
 
         prepareClassPath();
 
-        this.flyway = new Flyway(Thread.currentThread().getContextClassLoader());
-        this.locations = locationsToStrings(flyway.getLocations());
-        this.placeholders = flyway.getPlaceholders();
+        flyway = new Flyway(Thread.currentThread().getContextClassLoader());
+        locations = locationsToStrings(flyway.getLocations());
+        placeholders = flyway.getPlaceholders();
     }
 
     @Override
@@ -551,6 +585,81 @@ public abstract class AbstractFlywayTask extends Task {
             if (callbacks != null) {
                 flyway.setCallbacksAsClassNames(callbacks);
             }
+            if (schemas != null) {
+                flyway.setSchemas(schemas);
+            }
+            if (skipDefaultResolvers != null) {
+                flyway.setSkipDefaultResolvers(skipDefaultResolvers);
+            }
+            if (skipDefaultCallbacks != null) {
+                flyway.setSkipDefaultCallbacks(skipDefaultCallbacks);
+            }
+            if (table != null) {
+                flyway.setTable(table);
+            }
+            if (baselineVersion != null) {
+                flyway.setBaselineVersionAsString(baselineVersion);
+            }
+            if (baselineDescription != null) {
+                flyway.setBaselineDescription(baselineDescription);
+            }
+            if (mixed != null) {
+                flyway.setMixed(mixed);
+            }
+            if (group != null) {
+                flyway.setGroup(group);
+            }
+            if (installedBy != null) {
+                flyway.setInstalledBy(installedBy);
+            }
+            if (encoding != null) {
+                flyway.setEncoding(encoding);
+            }
+            if (sqlMigrationPrefix != null) {
+                flyway.setSqlMigrationPrefix(sqlMigrationPrefix);
+            }
+            if (repeatableSqlMigrationPrefix != null) {
+                flyway.setRepeatableSqlMigrationPrefix(repeatableSqlMigrationPrefix);
+            }
+            if (sqlMigrationSeparator != null) {
+                flyway.setSqlMigrationSeparator(sqlMigrationSeparator);
+            }
+            if (sqlMigrationSuffixes != null) {
+                flyway.setSqlMigrationSuffixes(sqlMigrationSuffixes);
+            }
+            if (target != null) {
+                flyway.setTargetAsString(target);
+            }
+            if (cleanOnValidationError != null) {
+                flyway.setCleanOnValidationError(cleanOnValidationError);
+            }
+            if (cleanDisabled != null) {
+                flyway.setCleanDisabled(cleanDisabled);
+            }
+            if (outOfOrder != null) {
+                flyway.setOutOfOrder(outOfOrder);
+            }
+            if (placeholderReplacement != null) {
+                flyway.setPlaceholderReplacement(placeholderReplacement);
+            }
+            if (placeholderPrefix != null) {
+                flyway.setPlaceholderPrefix(placeholderPrefix);
+            }
+            if (placeholderSuffix != null) {
+                flyway.setPlaceholderSuffix(placeholderSuffix);
+            }
+            if (ignoreMissingMigrations != null) {
+                flyway.setIgnoreMissingMigrations(ignoreMissingMigrations);
+            }
+            if (ignoreFutureMigrations != null) {
+                flyway.setIgnoreFutureMigrations(ignoreFutureMigrations);
+            }
+            if (validateOnMigrate != null) {
+                flyway.setValidateOnMigrate(validateOnMigrate);
+            }
+            if (baselineOnMigrate != null) {
+                flyway.setBaselineOnMigrate(baselineOnMigrate);
+            }
 
             Properties projectProperties = new Properties();
             projectProperties.putAll(getProject().getProperties());
@@ -559,8 +668,7 @@ public abstract class AbstractFlywayTask extends Task {
 
             flyway.setLocations(getLocations());
 
-            addPlaceholdersFromProperties(placeholders, getProject().getProperties());
-            flyway.setPlaceholders(placeholders);
+            addPlaceholdersFromProperties(flyway.getPlaceholders(), getProject().getProperties());
 
             doExecute(flyway);
 
