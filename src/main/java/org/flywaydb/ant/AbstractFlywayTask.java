@@ -48,7 +48,7 @@ public abstract class AbstractFlywayTask extends Task {
      */
     private static final String PLACEHOLDERS_PROPERTY_PREFIX = "flyway.placeholders.";
 
-    private final Flyway flyway;
+    private Flyway flyway;
 
     /**
      * Logger.
@@ -107,13 +107,6 @@ public abstract class AbstractFlywayTask extends Task {
      * Default constructor.
      */
     public AbstractFlywayTask() {
-        this(new Flyway(Thread.currentThread().getContextClassLoader()));
-    }
-
-    AbstractFlywayTask(Flyway flyway) {
-        this.flyway = flyway;
-        this.locations = locationsToStrings(flyway.getLocations());
-        this.placeholders = flyway.getPlaceholders();
     }
 
     private String[] locationsToStrings(Location[] locations) {
@@ -543,12 +536,16 @@ public abstract class AbstractFlywayTask extends Task {
         AntLogCreator.INSTANCE.setAntProject(getProject());
         LogFactory.setLogCreator(AntLogCreator.INSTANCE);
         log = LogFactory.getLog(getClass());
+
+        prepareClassPath();
+
+        this.flyway = new Flyway(Thread.currentThread().getContextClassLoader());
+        this.locations = locationsToStrings(flyway.getLocations());
+        this.placeholders = flyway.getPlaceholders();
     }
 
     @Override
     public void execute() throws BuildException {
-        prepareClassPath();
-
         try {
             flyway.setDataSource(createDataSource());
 
