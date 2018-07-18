@@ -48,6 +48,9 @@ public abstract class AbstractFlywayTask extends Task {
      */
     private static final String PLACEHOLDERS_PROPERTY_PREFIX = "flyway.placeholders.";
 
+    /**
+     * Flyway Core.
+     */
     private Flyway flyway;
 
     /**
@@ -102,12 +105,6 @@ public abstract class AbstractFlywayTask extends Task {
      * A map of &lt;placeholder, replacementValue&gt; to apply to sql migration scripts.
      */
     private Map<String, String> placeholders;
-
-    /**
-     * Default constructor.
-     */
-    public AbstractFlywayTask() {
-    }
 
     private String[] locationsToStrings(Location[] locations) {
         String[] locationsString = new String[locations.length];
@@ -313,18 +310,17 @@ public abstract class AbstractFlywayTask extends Task {
      * Prepares the classpath this task runs in, so that it includes both the classpath for Flyway and the classpath for the JDBC drivers and migrations.
      */
     private void prepareClassPath() {
-        Path classpath = (Path) getProject().getReference("flyway.classpath");
+        Path classpath = getProject().getReference("flyway.classpath");
         if (classpath != null) {
             setClasspath(classpath);
         } else {
-            Reference classpathRef = (Reference) getProject().getReference("flyway.classpathref");
+            Reference classpathRef = getProject().getReference("flyway.classpathref");
             if (classpathRef != null) {
                 setClasspathref(classpathRef);
             }
         }
 
-        ClassLoader classLoader =
-                new AntClassLoader(getClass().getClassLoader(), getProject(), classPath);
+        ClassLoader classLoader = new AntClassLoader(getClass().getClassLoader(), getProject(), classPath);
         Thread.currentThread().setContextClassLoader(classLoader);
     }
 
@@ -567,6 +563,7 @@ public abstract class AbstractFlywayTask extends Task {
             flyway.setPlaceholders(placeholders);
 
             doExecute(flyway);
+
         } catch (Exception e) {
             throw new BuildException("Flyway Error: " + e.toString(), ExceptionUtils.getRootCause(e));
         }
