@@ -136,14 +136,6 @@ public abstract class AbstractFlywayTask extends Task {
     private Boolean validateOnMigrate;
     private Boolean baselineOnMigrate;
 
-    private String[] locationsToStrings(Location[] locations) {
-        String[] locationsString = new String[locations.length];
-        for (int i = 0; i < locations.length; i++) {
-            locationsString[i] = locations[i].getDescriptor();
-        }
-        return locationsString;
-    }
-
     /**
      * @param classpath The classpath used to load the JDBC driver and the migrations.<br>Also configurable with Ant Property: ${flyway.classpath}
      */
@@ -290,107 +282,6 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * Creates the datasource base on the provided parameters.
-     *
-     * @return The fully configured datasource.
-     * @throws Exception Thrown when the datasource could not be created.
-     */
-    /* private -> for testing */ DataSource createDataSource() throws Exception {
-        String driverValue = useValueIfPropertyNotSet(driver, "driver");
-        String urlValue = useValueIfPropertyNotSet(url, "url");
-        String userValue = useValueIfPropertyNotSet(user, "user");
-        String passwordValue = useValueIfPropertyNotSet(password, "password");
-
-        return new DriverDataSource(Thread.currentThread().getContextClassLoader(), driverValue, urlValue, userValue, passwordValue, null);
-    }
-
-    /**
-     * Retrieves a value either from an Ant property or if not set, directly.
-     *
-     * @param value          The value to check.
-     * @param flywayProperty The flyway Ant property. Ex. 'url' for 'flyway.url'
-     * @return The value.
-     */
-    protected String useValueIfPropertyNotSet(String value, String flywayProperty) {
-        String propertyValue = getProject().getProperty("flyway." + flywayProperty);
-        if (propertyValue != null) {
-            return propertyValue;
-        }
-
-        return value;
-    }
-
-    /**
-     * Retrieves a boolean value either from an Ant property or if not set, directly.
-     *
-     * @param value          The boolean value to check.
-     * @param flywayProperty The flyway Ant property. Ex. 'url' for 'flyway.url'
-     * @return The boolean value.
-     */
-    protected boolean useValueIfPropertyNotSet(boolean value, String flywayProperty) {
-        String propertyValue = getProject().getProperty("flyway." + flywayProperty);
-        if (propertyValue != null) {
-            return Boolean.parseBoolean(propertyValue);
-        }
-
-        return value;
-    }
-
-    /**
-     * Prepares the classpath this task runs in, so that it includes both the classpath for Flyway and the classpath for the JDBC drivers and migrations.
-     */
-    private void prepareClassPath() {
-        Path classpath = getProject().getReference("flyway.classpath");
-        if (classpath != null) {
-            setClasspath(classpath);
-        } else {
-            Reference classpathRef = getProject().getReference("flyway.classpathref");
-            if (classpathRef != null) {
-                setClasspathref(classpathRef);
-            }
-        }
-
-        ClassLoader classLoader = new AntClassLoader(getClass().getClassLoader(), getProject(), classPath);
-        Thread.currentThread().setContextClassLoader(classLoader);
-    }
-
-    /**
-     * Do not use. For Ant itself.
-     *
-     * @param locationsElement The locations on the classpath.
-     */
-    public void addConfiguredLocations(LocationsElement locationsElement) {
-        this.locations = locationsElement.locations.toArray(new String[locationsElement.locations.size()]);
-    }
-
-    /**
-     * Do not use. For Ant itself.
-     *
-     * @param resolversElement The resolvers on the classpath.
-     */
-    public void addConfiguredResolvers(ResolversElement resolversElement) {
-        this.resolvers = resolversElement.resolvers.toArray(new String[resolversElement.resolvers.size()]);
-    }
-
-    /**
-     * Do not use. For Ant itself.
-     *
-     * @param callbacksElement The callbacks on the classpath.
-     */
-    public void addConfiguredCallbacks(CallbacksElement callbacksElement) {
-        this.callbacks = callbacksElement.callbacks.toArray(new String[callbacksElement.callbacks.size()]);
-    }
-
-    /**
-     * Do not use. For Ant itself.
-     *
-     * @param schemasElement The schemas.
-     */
-    public void addConfiguredSchemas(SchemasElement schemasElement) {
-        this.schemas = schemasElement.schemas.toArray(new String[schemasElement.schemas.size()]);
-    }
-
-    /**
      * @param encoding The encoding of Sql migrations. (default: UTF-8)<br>Also configurable with Ant Property: ${flyway.encoding}
      */
     public void setEncoding(String encoding) {
@@ -501,15 +392,6 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * Adds placeholders from a nested &lt;placeholders&gt; element. Called by Ant.
-     *
-     * @param placeholders The fully configured placeholders element.
-     */
-    public void addConfiguredPlaceholders(PlaceholdersElement placeholders) {
-        this.placeholders = placeholders.placeholders;
-    }
-
-    /**
      * Ignore missing migrations when reading the metadata table. These are migrations that were performed by an older deployment of the application that are no
      * longer available in this version. For example: we have migrations available on the classpath with versions 1.0 and 3.0. The metadata table indicates that
      * a migration with version 2.0 (unknown to us) has also been applied. Instead of bombing out (fail fast) with an exception, a warning is logged and Flyway
@@ -555,6 +437,116 @@ public abstract class AbstractFlywayTask extends Task {
      */
     public void setBaselineOnMigrate(boolean baselineOnMigrate) {
         this.baselineOnMigrate = baselineOnMigrate;
+    }
+
+    /**
+     * Adds placeholders from a nested &lt;placeholders&gt; element. Called by Ant.
+     *
+     * @param placeholders The fully configured placeholders element.
+     */
+    public void addConfiguredPlaceholders(PlaceholdersElement placeholders) {
+        this.placeholders = placeholders.placeholders;
+    }
+
+    /**
+     * Do not use. For Ant itself.
+     *
+     * @param locationsElement The locations on the classpath.
+     */
+    public void addConfiguredLocations(LocationsElement locationsElement) {
+        this.locations = locationsElement.locations.toArray(new String[locationsElement.locations.size()]);
+    }
+
+    /**
+     * Do not use. For Ant itself.
+     *
+     * @param resolversElement The resolvers on the classpath.
+     */
+    public void addConfiguredResolvers(ResolversElement resolversElement) {
+        this.resolvers = resolversElement.resolvers.toArray(new String[resolversElement.resolvers.size()]);
+    }
+
+    /**
+     * Do not use. For Ant itself.
+     *
+     * @param callbacksElement The callbacks on the classpath.
+     */
+    public void addConfiguredCallbacks(CallbacksElement callbacksElement) {
+        this.callbacks = callbacksElement.callbacks.toArray(new String[callbacksElement.callbacks.size()]);
+    }
+
+    /**
+     * Do not use. For Ant itself.
+     *
+     * @param schemasElement The schemas.
+     */
+    public void addConfiguredSchemas(SchemasElement schemasElement) {
+        this.schemas = schemasElement.schemas.toArray(new String[schemasElement.schemas.size()]);
+    }
+
+    /**
+     * Creates the datasource base on the provided parameters.
+     *
+     * @return The fully configured datasource.
+     * @throws Exception Thrown when the datasource could not be created.
+     */
+    protected DataSource createDataSource() throws Exception {
+        String driverValue = useValueIfPropertyNotSet(driver, "driver");
+        String urlValue = useValueIfPropertyNotSet(url, "url");
+        String userValue = useValueIfPropertyNotSet(user, "user");
+        String passwordValue = useValueIfPropertyNotSet(password, "password");
+
+        return new DriverDataSource(Thread.currentThread().getContextClassLoader(), driverValue, urlValue, userValue, passwordValue, null);
+    }
+
+    /**
+     * Retrieves a value either from an Ant property or if not set, directly.
+     *
+     * @param value          The value to check.
+     * @param flywayProperty The flyway Ant property. Ex. 'url' for 'flyway.url'
+     * @return The value.
+     */
+    protected String useValueIfPropertyNotSet(String value, String flywayProperty) {
+        String propertyValue = getProject().getProperty("flyway." + flywayProperty);
+        if (propertyValue != null) {
+            return propertyValue;
+        }
+
+        return value;
+    }
+
+    /**
+     * Retrieves a boolean value either from an Ant property or if not set, directly.
+     *
+     * @param value          The boolean value to check.
+     * @param flywayProperty The flyway Ant property. Ex. 'url' for 'flyway.url'
+     * @return The boolean value.
+     */
+    protected boolean useValueIfPropertyNotSet(boolean value, String flywayProperty) {
+        String propertyValue = getProject().getProperty("flyway." + flywayProperty);
+        if (propertyValue != null) {
+            return Boolean.parseBoolean(propertyValue);
+        }
+
+        return value;
+    }
+
+    /**
+     * Prepares the classpath this task runs in, so that it includes both the classpath for Flyway and the classpath for the JDBC drivers and migrations.
+     */
+    private void prepareClassPath() {
+        Path classpath = getProject().getReference("flyway.classpath");
+        if (classpath != null) {
+            setClasspath(classpath);
+        } else {
+            Reference classpathRef = getProject().getReference("flyway.classpathref");
+            if (classpathRef != null) {
+                setClasspathref(classpathRef);
+            }
+        }
+
+        ClassLoader classLoader = new AntClassLoader(getClass().getClassLoader(), getProject(), classPath);
+        Thread.currentThread().setContextClassLoader(classLoader);
     }
 
     @Override
@@ -698,6 +690,14 @@ public abstract class AbstractFlywayTask extends Task {
         }
 
         return locationsVal;
+    }
+
+    private String[] locationsToStrings(Location[] locations) {
+        String[] locationsString = new String[locations.length];
+        for (int i = 0; i < locations.length; i++) {
+            locationsString[i] = locations[i].getDescriptor();
+        }
+        return locationsString;
     }
 
     /**
