@@ -47,6 +47,10 @@
         <flyway:repair/>
     </target>
 
+    <target name="undo-test" depends="-set-parameters">
+        <flyway:undo/>
+    </target>
+
     <target name="-check-db">
         <fail message="Property 'db' must be set.">
             <condition>

@@ -23,4 +23,5 @@
     <taskdef name="validate" classname="org.flywaydb.ant.ValidateTask"/>
     <taskdef name="info" classname="org.flywaydb.ant.InfoTask"/>
     <taskdef name="repair" classname="org.flywaydb.ant.RepairTask"/>
+    <taskdef name="undo" classname="org.flywaydb.ant.UndoTask"/>
 </antlib>

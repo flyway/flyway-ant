@@ -117,11 +117,14 @@ public abstract class AbstractFlywayTask extends Task {
     private String baselineDescription;
     private Boolean mixed;
     private Boolean group;
+    private Boolean stream;
+    private Boolean batch;
     private String installedBy;
     private SchemasElement schemasElement;
     private String encoding;
     private String sqlMigrationPrefix;
     private String repeatableSqlMigrationPrefix;
+    private String undoSqlMigrationPrefix;
     private String sqlMigrationSeparator;
     private String[] sqlMigrationSuffixes;
     private String target;
@@ -132,6 +135,7 @@ public abstract class AbstractFlywayTask extends Task {
     private String placeholderPrefix;
     private String placeholderSuffix;
     private Boolean ignoreMissingMigrations;
+    private Boolean ignoreIgnoredMigrations;
     private Boolean ignoreFutureMigrations;
     private Boolean validateOnMigrate;
     private Boolean baselineOnMigrate;
@@ -224,8 +228,8 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param table <p>The name of the schema metadata table that will be used by Flyway.</p><p> By default (single-schema mode) the metadata table is placed in
-     *              the default schema for the connection provided by the datasource. </p> <p> When the <i>flyway.schemas</i> property is set (multi-schema
+     * @param table <p>The name of the schema metadata table that will be used by Flyway.</p><p> By default (single-schema mode) the metadata table is placed
+     *              in the default schema for the connection provided by the datasource. </p> <p> When the <i>flyway.schemas</i> property is set (multi-schema
      *              mode), the metadata table is placed in the first schema of the list. </p> (default: schema_version)<br>Also configurable with Ant Property:
      *              ${flyway.table}
      */
@@ -272,6 +276,33 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * Whether to stream SQL migrations when executing them. Streaming doesn't load the entire migration in memory at once. Instead each statement is loaded
+     * individually. This is particularly useful for very large SQL migrations composed of multiple MB or even GB of reference data, as this dramatically
+     * reduces Flyway's memory consumption.
+     * <p>
+     * Also configurable with Ant Property: ${flyway.stream}
+     *
+     * @param stream {@code true} if migrations should be streamed. {@code false} if they should be loaded individually instead. (default: {@code false})
+     */
+    public void setStream(boolean stream) {
+        this.stream = stream;
+    }
+
+    /**
+     * Whether to batch SQL statements when executing them. Batching can save up to 99 percent of network roundtrips by sending up to 100 statements at once
+     * over the network to the database, instead of sending each statement individually. This is particularly useful for very large SQL migrations composed of
+     * multiple MB or even GB of reference data, as this can dramatically reduce the network overhead. This is supported for INSERT, UPDATE, DELETE, MERGE and
+     * UPSERT statements. All other statements are automatically executed without batching.
+     * <p>
+     * Also configurable with Ant Property: ${flyway.batch}
+     *
+     * @param batch {@code true} if SQL statements should be batched. {@code false} if they should be sent individually instead. (default: {@code false})
+     */
+    public void setBatch(boolean batch) {
+        this.batch = batch;
+    }
+
+    /**
      * The username that will be recorded in the metadata table as having applied the migration. <p>Also configurable with Ant Property:
      * ${flyway.installedBy}</p>
      *
@@ -289,7 +320,7 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix , which using the defaults translates to
+     * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix, which using the defaults translates to
      * V1_1__My_description.sql</p>
      *
      * @param sqlMigrationPrefix The file name prefix for Sql migrations (default: V)<br>Also configurable with Ant Property: ${flyway.sqlMigrationPrefix}
@@ -307,6 +338,17 @@ public abstract class AbstractFlywayTask extends Task {
      */
     public void setRepeatableSqlMigrationPrefix(String repeatableSqlMigrationPrefix) {
         this.repeatableSqlMigrationPrefix = repeatableSqlMigrationPrefix;
+    }
+
+    /**
+     * <p>Undo SQL migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix, which using the defaults translates to
+     * U1.1__My_description.sql</p>
+     *
+     * @param undoSqlMigrationPrefix The file name prefix for undo SQL migrations (default: U)<br>Also configurable with Ant Property:
+     *                               ${flyway.undoSqlMigrationPrefix }
+     */
+    public void setUndoSqlMigrationPrefix(String undoSqlMigrationPrefix) {
+        this.undoSqlMigrationPrefix = undoSqlMigrationPrefix;
     }
 
     /**
@@ -403,6 +445,21 @@ public abstract class AbstractFlywayTask extends Task {
      */
     public void setIgnoreMissingMigrations(boolean ignoreMissingMigrations) {
         this.ignoreMissingMigrations = ignoreMissingMigrations;
+    }
+
+    /**
+     * Ignore ignored migrations when reading the schema history table. These are migrations that were added in between already migrated migrations in this
+     * version. For example: we have migrations available on the classpath with versions from 1.0 to 3.0. The schema history table indicates that version 1 was
+     * finished on 1.0.15, and the next one was 2.0.0. But with the next release a new migration was added to version 1: 1.0.16. Such scenario is ignored by
+     * migrate command, but by default is rejected by validate. When ignoreIgnoredMigrations is enabled, such case will not be reported by validate command.
+     * This is useful for situations where one must be able to deliver complete set of migrations in a delivery package for multiple versions of the product,
+     * and allows for further development of older versions. <br>Also configurable with Ant Property: ${flyway.ignoreIgnoredMigrations}
+     *
+     * @param ignoreIgnoredMigrations {@code true} to continue normally and log a warning, {@code false} to fail fast with an exception. (default: {@code
+     *                                false})
+     */
+    public void setIgnoreIgnoredMigrations(boolean ignoreIgnoredMigrations) {
+        this.ignoreIgnoredMigrations = ignoreIgnoredMigrations;
     }
 
     /**
@@ -597,6 +654,12 @@ public abstract class AbstractFlywayTask extends Task {
             if (group != null) {
                 flyway.setGroup(group);
             }
+            if (stream != null) {
+                flyway.setStream(stream);
+            }
+            if (batch != null) {
+                flyway.setBatch(batch);
+            }
             if (installedBy != null) {
                 flyway.setInstalledBy(installedBy);
             }
@@ -608,6 +671,9 @@ public abstract class AbstractFlywayTask extends Task {
             }
             if (repeatableSqlMigrationPrefix != null) {
                 flyway.setRepeatableSqlMigrationPrefix(repeatableSqlMigrationPrefix);
+            }
+            if (undoSqlMigrationPrefix != null) {
+                flyway.setUndoSqlMigrationPrefix(undoSqlMigrationPrefix);
             }
             if (sqlMigrationSeparator != null) {
                 flyway.setSqlMigrationSeparator(sqlMigrationSeparator);
@@ -638,6 +704,9 @@ public abstract class AbstractFlywayTask extends Task {
             }
             if (ignoreMissingMigrations != null) {
                 flyway.setIgnoreMissingMigrations(ignoreMissingMigrations);
+            }
+            if (ignoreIgnoredMigrations != null) {
+                flyway.setIgnoreIgnoredMigrations(ignoreIgnoredMigrations);
             }
             if (ignoreFutureMigrations != null) {
                 flyway.setIgnoreFutureMigrations(ignoreFutureMigrations);
