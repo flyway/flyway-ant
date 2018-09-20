@@ -4,7 +4,7 @@ Flyway Ant plugin provided as an AntLib.
 
 ## Dependency
 
-```
+```xml
 <dependency>
     <groupId>cz.net21.flyway.ant</groupId>
     <artifactId>flyway-ant</artifactId>
@@ -14,7 +14,7 @@ Flyway Ant plugin provided as an AntLib.
 
 ## Usage
 
-```
+```xml
 <project ... xmlns:flyway="antlib:org.flywaydb.ant">
    <path id="flyway.lib.path">
        <!-- include all jars from the Flyway AntLib distribution -->
@@ -48,7 +48,7 @@ The Flyway Ant tasks can be configured in the following ways:
 
 ### Attributes of the task
 
-```
+```xml
 <flyway:migrate driver="com.myvendor.Driver" password="mySecretPwd">
     <locations>
         <location path="largetest/migrations1"/>
@@ -71,7 +71,7 @@ The Flyway Ant tasks can be configured in the following ways:
 
 ### Through Ant properties
 
-```
+```xml
 <!-- Properties are prefixed with flyway. -->
 <property name="flyway.password" value="mySecretPwd"/>
 
