@@ -607,7 +607,6 @@ public abstract class AbstractFlywayTask extends Task {
      * Creates the datasource base on the provided parameters.
      *
      * @return The fully configured datasource.
-     * @throws Exception Thrown when the datasource could not be created.
      */
     protected DataSource createDataSource() {
         String driverValue = useValueIfPropertyNotSet(driver, "driver");
