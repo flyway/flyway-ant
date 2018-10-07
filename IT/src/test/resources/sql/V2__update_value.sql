@@ -1,0 +1,1 @@
+update TESTTABLE set val = '123';
