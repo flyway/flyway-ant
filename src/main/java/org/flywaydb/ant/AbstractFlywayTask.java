@@ -32,11 +32,12 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.Location;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.api.logging.Log;
 import org.flywaydb.core.api.logging.LogFactory;
+import org.flywaydb.core.internal.jdbc.DriverDataSource;
 import org.flywaydb.core.internal.util.ExceptionUtils;
 import org.flywaydb.core.internal.util.StringUtils;
-import org.flywaydb.core.internal.util.jdbc.DriverDataSource;
 
 /**
  * Base class for all Flyway Ant tasks.
@@ -49,9 +50,9 @@ public abstract class AbstractFlywayTask extends Task {
     private static final String PLACEHOLDERS_PROPERTY_PREFIX = "flyway.placeholders.";
 
     /**
-     * Flyway Core.
+     * Flyway Configuration.
      */
-    private Flyway flyway;
+    private FluentConfiguration flywayConfig;
 
     /**
      * Logger.
@@ -484,10 +485,10 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * <p> Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be baselined
-     * with the {@code initialVersion} before executing the migrations. Only migrations above {@code initialVersion} will then be applied. </p> <p> This is
-     * useful for initial Flyway production deployments on projects with an existing DB. </p> <p> Be careful when enabling this as it removes the safety net
-     * that ensures Flyway does not migrate the wrong database in case of a configuration mistake! </p> Also configurable with Ant Property:
+     * <p> Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be
+     * baselined with the {@code initialVersion} before executing the migrations. Only migrations above {@code initialVersion} will then be applied. </p> <p>
+     * This is useful for initial Flyway production deployments on projects with an existing DB. </p> <p> Be careful when enabling this as it removes the safety
+     * net that ensures Flyway does not migrate the wrong database in case of a configuration mistake! </p> Also configurable with Ant Property:
      * ${flyway.baselineOnMigrate}
      *
      * @param baselineOnMigrate {@code true} if baseline should be called on migrate for non-empty schemas, {@code false} if not. (default: {@code false})
@@ -547,7 +548,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @return The fully configured datasource.
      * @throws Exception Thrown when the datasource could not be created.
      */
-    protected DataSource createDataSource() throws Exception {
+    protected DataSource createDataSource() {
         String driverValue = useValueIfPropertyNotSet(driver, "driver");
         String urlValue = useValueIfPropertyNotSet(url, "url");
         String userValue = useValueIfPropertyNotSet(user, "user");
@@ -614,120 +615,123 @@ public abstract class AbstractFlywayTask extends Task {
 
         prepareClassPath();
 
-        flyway = new Flyway(Thread.currentThread().getContextClassLoader());
-        locations = locationsToStrings(flyway.getLocations());
-        placeholders = flyway.getPlaceholders();
+        flywayConfig = Flyway.configure(Thread.currentThread().getContextClassLoader());
+        locations = locationsToStrings(flywayConfig.getLocations());
+        placeholders = flywayConfig.getPlaceholders();
     }
 
     @Override
     public void execute() throws BuildException {
         try {
-            flyway.setDataSource(createDataSource());
+            // first, load configuration from environment
+            flywayConfig.configuration(System.getProperties());
 
-            if (resolvers != null) {
-                flyway.setResolversAsClassNames(resolvers);
-            }
-            if (callbacks != null) {
-                flyway.setCallbacksAsClassNames(callbacks);
-            }
-            if (schemas != null) {
-                flyway.setSchemas(schemas);
-            }
-            if (skipDefaultResolvers != null) {
-                flyway.setSkipDefaultResolvers(skipDefaultResolvers);
-            }
-            if (skipDefaultCallbacks != null) {
-                flyway.setSkipDefaultCallbacks(skipDefaultCallbacks);
-            }
-            if (table != null) {
-                flyway.setTable(table);
-            }
-            if (baselineVersion != null) {
-                flyway.setBaselineVersionAsString(baselineVersion);
-            }
-            if (baselineDescription != null) {
-                flyway.setBaselineDescription(baselineDescription);
-            }
-            if (mixed != null) {
-                flyway.setMixed(mixed);
-            }
-            if (group != null) {
-                flyway.setGroup(group);
-            }
-            if (stream != null) {
-                flyway.setStream(stream);
-            }
-            if (batch != null) {
-                flyway.setBatch(batch);
-            }
-            if (installedBy != null) {
-                flyway.setInstalledBy(installedBy);
-            }
-            if (encoding != null) {
-                flyway.setEncoding(encoding);
-            }
-            if (sqlMigrationPrefix != null) {
-                flyway.setSqlMigrationPrefix(sqlMigrationPrefix);
-            }
-            if (repeatableSqlMigrationPrefix != null) {
-                flyway.setRepeatableSqlMigrationPrefix(repeatableSqlMigrationPrefix);
-            }
-            if (undoSqlMigrationPrefix != null) {
-                flyway.setUndoSqlMigrationPrefix(undoSqlMigrationPrefix);
-            }
-            if (sqlMigrationSeparator != null) {
-                flyway.setSqlMigrationSeparator(sqlMigrationSeparator);
-            }
-            if (sqlMigrationSuffixes != null) {
-                flyway.setSqlMigrationSuffixes(sqlMigrationSuffixes);
-            }
-            if (target != null) {
-                flyway.setTargetAsString(target);
-            }
-            if (cleanOnValidationError != null) {
-                flyway.setCleanOnValidationError(cleanOnValidationError);
-            }
-            if (cleanDisabled != null) {
-                flyway.setCleanDisabled(cleanDisabled);
-            }
-            if (outOfOrder != null) {
-                flyway.setOutOfOrder(outOfOrder);
-            }
-            if (placeholderReplacement != null) {
-                flyway.setPlaceholderReplacement(placeholderReplacement);
-            }
-            if (placeholderPrefix != null) {
-                flyway.setPlaceholderPrefix(placeholderPrefix);
-            }
-            if (placeholderSuffix != null) {
-                flyway.setPlaceholderSuffix(placeholderSuffix);
-            }
-            if (ignoreMissingMigrations != null) {
-                flyway.setIgnoreMissingMigrations(ignoreMissingMigrations);
-            }
-            if (ignoreIgnoredMigrations != null) {
-                flyway.setIgnoreIgnoredMigrations(ignoreIgnoredMigrations);
-            }
-            if (ignoreFutureMigrations != null) {
-                flyway.setIgnoreFutureMigrations(ignoreFutureMigrations);
-            }
-            if (validateOnMigrate != null) {
-                flyway.setValidateOnMigrate(validateOnMigrate);
-            }
-            if (baselineOnMigrate != null) {
-                flyway.setBaselineOnMigrate(baselineOnMigrate);
-            }
-
+            // second, load configuration from system properties
             Properties projectProperties = new Properties();
             projectProperties.putAll(getProject().getProperties());
-            flyway.configure(projectProperties);
-            flyway.configure(System.getProperties());
+            flywayConfig.configuration(projectProperties);
 
-            flyway.setLocations(getLocations());
+            // last, load configuration from build script properties
+            flywayConfig.dataSource(createDataSource());
 
-            addPlaceholdersFromProperties(flyway.getPlaceholders(), getProject().getProperties());
+            if (resolvers != null) {
+                flywayConfig.resolvers(resolvers);
+            }
+            if (callbacks != null) {
+                flywayConfig.callbacks(callbacks);
+            }
+            if (schemas != null) {
+                flywayConfig.schemas(schemas);
+            }
+            if (skipDefaultResolvers != null) {
+                flywayConfig.skipDefaultResolvers(skipDefaultResolvers);
+            }
+            if (skipDefaultCallbacks != null) {
+                flywayConfig.skipDefaultCallbacks(skipDefaultCallbacks);
+            }
+            if (table != null) {
+                flywayConfig.table(table);
+            }
+            if (baselineVersion != null) {
+                flywayConfig.baselineVersion(baselineVersion);
+            }
+            if (baselineDescription != null) {
+                flywayConfig.baselineDescription(baselineDescription);
+            }
+            if (mixed != null) {
+                flywayConfig.mixed(mixed);
+            }
+            if (group != null) {
+                flywayConfig.group(group);
+            }
+            if (stream != null) {
+                flywayConfig.stream(stream);
+            }
+            if (batch != null) {
+                flywayConfig.batch(batch);
+            }
+            if (installedBy != null) {
+                flywayConfig.installedBy(installedBy);
+            }
+            if (encoding != null) {
+                flywayConfig.encoding(encoding);
+            }
+            if (sqlMigrationPrefix != null) {
+                flywayConfig.sqlMigrationPrefix(sqlMigrationPrefix);
+            }
+            if (repeatableSqlMigrationPrefix != null) {
+                flywayConfig.repeatableSqlMigrationPrefix(repeatableSqlMigrationPrefix);
+            }
+            if (undoSqlMigrationPrefix != null) {
+                flywayConfig.undoSqlMigrationPrefix(undoSqlMigrationPrefix);
+            }
+            if (sqlMigrationSeparator != null) {
+                flywayConfig.sqlMigrationSeparator(sqlMigrationSeparator);
+            }
+            if (sqlMigrationSuffixes != null) {
+                flywayConfig.sqlMigrationSuffixes(sqlMigrationSuffixes);
+            }
+            if (target != null) {
+                flywayConfig.target(target);
+            }
+            if (cleanOnValidationError != null) {
+                flywayConfig.cleanOnValidationError(cleanOnValidationError);
+            }
+            if (cleanDisabled != null) {
+                flywayConfig.cleanDisabled(cleanDisabled);
+            }
+            if (outOfOrder != null) {
+                flywayConfig.outOfOrder(outOfOrder);
+            }
+            if (placeholderReplacement != null) {
+                flywayConfig.placeholderReplacement(placeholderReplacement);
+            }
+            if (placeholderPrefix != null) {
+                flywayConfig.placeholderPrefix(placeholderPrefix);
+            }
+            if (placeholderSuffix != null) {
+                flywayConfig.placeholderSuffix(placeholderSuffix);
+            }
+            if (ignoreMissingMigrations != null) {
+                flywayConfig.ignoreMissingMigrations(ignoreMissingMigrations);
+            }
+            if (ignoreIgnoredMigrations != null) {
+                flywayConfig.ignoreIgnoredMigrations(ignoreIgnoredMigrations);
+            }
+            if (ignoreFutureMigrations != null) {
+                flywayConfig.ignoreFutureMigrations(ignoreFutureMigrations);
+            }
+            if (validateOnMigrate != null) {
+                flywayConfig.validateOnMigrate(validateOnMigrate);
+            }
+            if (baselineOnMigrate != null) {
+                Flyway.configure().baselineOnMigrate(baselineOnMigrate);
+            }
 
-            doExecute(flyway);
+            flywayConfig.locations(getLocations());
+            flywayConfig.placeholders(loadPlaceholdersFromProperties(flywayConfig.getPlaceholders(), getProject().getProperties()));
+
+            doExecute(flywayConfig.load());
 
         } catch (Exception e) {
             throw new BuildException("Flyway Error: " + e.toString(), ExceptionUtils.getRootCause(e));
@@ -786,12 +790,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * Adds the additional placeholders contained in these properties to the existing list.
+     * Load the additional placeholders contained in these properties.
      *
-     * @param placeholders The existing list of placeholders.
-     * @param properties   The properties containing additional placeholders.
+     * @param currentPlaceholders The current placeholders map.
+     * @param properties          The properties containing additional placeholders.
      */
-    private static void addPlaceholdersFromProperties(Map<String, String> placeholders, Hashtable properties) {
+    private static Map<String, String> loadPlaceholdersFromProperties(Map<String, String> currentPlaceholders, Hashtable properties) {
+        Map<String, String> placeholders = new HashMap<String, String>(currentPlaceholders);
         for (Object property : properties.keySet()) {
             String propertyName = (String) property;
             if (propertyName.startsWith(PLACEHOLDERS_PROPERTY_PREFIX)
@@ -801,6 +806,7 @@ public abstract class AbstractFlywayTask extends Task {
                 placeholders.put(placeholderName, placeholderValue);
             }
         }
+        return placeholders;
     }
 
     /**
