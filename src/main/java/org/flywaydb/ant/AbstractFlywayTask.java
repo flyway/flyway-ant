@@ -121,6 +121,8 @@ public abstract class AbstractFlywayTask extends Task {
     private Boolean stream;
     private Boolean batch;
     private String installedBy;
+    private Integer connectRetries;
+    private String initSql;
     private SchemasElement schemasElement;
     private String encoding;
     private String sqlMigrationPrefix;
@@ -137,9 +139,14 @@ public abstract class AbstractFlywayTask extends Task {
     private String placeholderSuffix;
     private Boolean ignoreMissingMigrations;
     private Boolean ignoreIgnoredMigrations;
+    private Boolean ignorePendingMigrations;
     private Boolean ignoreFutureMigrations;
     private Boolean validateOnMigrate;
     private Boolean baselineOnMigrate;
+    private String[] errorOverrides;
+    private String dryRunOutput;
+    private Boolean oracleSqlplus;
+    private String licenseKey;
 
     /**
      * @param classpath The classpath used to load the JDBC driver and the migrations.<br>Also configurable with Ant Property: ${flyway.classpath}
@@ -185,6 +192,22 @@ public abstract class AbstractFlywayTask extends Task {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @param connectRetries The maximum number of retries when attempting to connect to the database. (default: <i>0</i>)<br>Also configurable with Ant
+     *                       Property: ${flyway.connectRetries}
+     */
+    public void setConnectRetries(int connectRetries) {
+        this.connectRetries = connectRetries;
+    }
+
+    /**
+     * @param initSql The SQL statements to run to initialize a new database connection immediately after opening it. (default: <i>none</i>)<br>Also
+     *                configurable with Ant Property: ${flyway.initSql}
+     */
+    public void setInitSql(String initSql) {
+        this.initSql = initSql;
     }
 
     /**
@@ -324,7 +347,7 @@ public abstract class AbstractFlywayTask extends Task {
      * <p>Sql migrations have the following file name structure: prefixVERSIONseparatorDESCRIPTIONsuffix, which using the defaults translates to
      * V1_1__My_description.sql</p>
      *
-     * @param sqlMigrationPrefix The file name prefix for Sql migrations (default: V)<br>Also configurable with Ant Property: ${flyway.sqlMigrationPrefix}
+     * @param sqlMigrationPrefix The file name prefix for Sql migrations (default: V).<br>Also configurable with Ant Property: ${flyway.sqlMigrationPrefix}
      */
     public void setSqlMigrationPrefix(String sqlMigrationPrefix) {
         this.sqlMigrationPrefix = sqlMigrationPrefix;
@@ -464,6 +487,14 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param ignorePendingMigrations {@code true} Ignore pending migrations when reading the schema history table. (default: {@code false})<br> Also
+     *                                configurable with Ant Property: ${flyway.ignorePendingMigrations}
+     */
+    public void setIgnorePendingMigrations(boolean ignorePendingMigrations) {
+        this.ignorePendingMigrations = ignorePendingMigrations;
+    }
+
+    /**
      * Whether to ignore future migrations when reading the metadata table. These are migrations that were performed by a newer deployment of the application
      * that are not yet available in this version. For example: we have migrations available on the classpath up to version 3.0. The metadata table indicates
      * that a migration to version 4.0 (unknown to us) has already been applied. Instead of bombing out (fail fast) with an exception, a warning is logged and
@@ -485,16 +516,46 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * <p> Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be
-     * baselined with the {@code initialVersion} before executing the migrations. Only migrations above {@code initialVersion} will then be applied. </p> <p>
-     * This is useful for initial Flyway production deployments on projects with an existing DB. </p> <p> Be careful when enabling this as it removes the safety
-     * net that ensures Flyway does not migrate the wrong database in case of a configuration mistake! </p> Also configurable with Ant Property:
-     * ${flyway.baselineOnMigrate}
+     * Whether to automatically call baseline when migrate is executed against a non-empty schema with no metadata table. This schema will then be baselined
+     * with the {@code initialVersion} before executing the migrations. Only migrations above {@code initialVersion} will then be applied. <br> This is useful
+     * for initial Flyway production deployments on projects with an existing DB. <br> Be careful when enabling this as it removes the safety net that ensures
+     * Flyway does not migrate the wrong database in case of a configuration mistake! <br> Also configurable with Ant Property: ${flyway.baselineOnMigrate}
      *
      * @param baselineOnMigrate {@code true} if baseline should be called on migrate for non-empty schemas, {@code false} if not. (default: {@code false})
      */
     public void setBaselineOnMigrate(boolean baselineOnMigrate) {
         this.baselineOnMigrate = baselineOnMigrate;
+    }
+
+    /**
+     * @param errorOverrides Rules for the built-in error handling that lets you override specific SQL states and errors codes from error to warning or from
+     *                       warning to error, comma-separated. (default: *blank*)<br>Also configurable with Ant Property: ${flyway.errorOverrides}
+     */
+    public void setErrorOverrides(String errorOverrides) {
+        this.errorOverrides = StringUtils.tokenizeToStringArray(errorOverrides, ",");
+    }
+
+    /**
+     * @param dryRunOutput The file where to output the SQL statements of a migration dry run. (default: *Execute directly against the database*)<br>Also
+     *                     configurable with Ant Property: ${flyway.dryRunOutput}
+     */
+    public void setDryRunOutput(String dryRunOutput) {
+        this.dryRunOutput = dryRunOutput;
+    }
+
+    /**
+     * @param oracleSqlplus Whether to Flyway's support for Oracle SQL*Plus commands should be activated. (default: *false*)<br>Also configurable with Ant
+     *                      Property: ${flyway.oracleSqlplus}
+     */
+    public void setOracleSqlplus(boolean oracleSqlplus) {
+        this.oracleSqlplus = oracleSqlplus;
+    }
+
+    /**
+     * @param licenseKey Flyway's license key. (default: *blank*)<br>Also configurable with Ant Property: ${flyway.licenseKey}
+     */
+    public void setLicenseKey(String licenseKey) {
+        this.licenseKey = licenseKey;
     }
 
     /**
@@ -623,7 +684,7 @@ public abstract class AbstractFlywayTask extends Task {
     @Override
     public void execute() throws BuildException {
         try {
-            // first, load configuration from environment
+            // first, load configuration from the environment
             flywayConfig.configuration(System.getProperties());
 
             // second, load configuration from system properties
@@ -718,6 +779,9 @@ public abstract class AbstractFlywayTask extends Task {
             if (ignoreIgnoredMigrations != null) {
                 flywayConfig.ignoreIgnoredMigrations(ignoreIgnoredMigrations);
             }
+            if (ignorePendingMigrations != null) {
+                flywayConfig.ignorePendingMigrations(ignorePendingMigrations);
+            }
             if (ignoreFutureMigrations != null) {
                 flywayConfig.ignoreFutureMigrations(ignoreFutureMigrations);
             }
@@ -725,7 +789,25 @@ public abstract class AbstractFlywayTask extends Task {
                 flywayConfig.validateOnMigrate(validateOnMigrate);
             }
             if (baselineOnMigrate != null) {
-                Flyway.configure().baselineOnMigrate(baselineOnMigrate);
+                flywayConfig.baselineOnMigrate(baselineOnMigrate);
+            }
+            if (connectRetries != null) {
+                flywayConfig.connectRetries(connectRetries);
+            }
+            if (initSql != null) {
+                flywayConfig.initSql(initSql);
+            }
+            if (errorOverrides != null) {
+                flywayConfig.errorOverrides(errorOverrides);
+            }
+            if (dryRunOutput != null) {
+                flywayConfig.dryRunOutput(dryRunOutput);
+            }
+            if (oracleSqlplus != null) {
+                flywayConfig.oracleSqlplus(oracleSqlplus);
+            }
+            if (licenseKey != null) {
+                flywayConfig.licenseKey(licenseKey);
             }
 
             flywayConfig.locations(getLocations());
