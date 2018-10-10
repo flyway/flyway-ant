@@ -670,10 +670,11 @@ public abstract class AbstractFlywayTask extends Task {
     @Override
     public void init() throws BuildException {
         AntLogCreator.INSTANCE.setAntProject(getProject());
-        LogFactory.setLogCreator(AntLogCreator.INSTANCE);
-        log = LogFactory.getLog(getClass());
+        LogFactory.setFallbackLogCreator(AntLogCreator.INSTANCE);
 
         prepareClassPath();
+
+        log = LogFactory.getLog(getClass());
 
         flywayConfig = Flyway.configure(Thread.currentThread().getContextClassLoader());
         locations = locationsToStrings(flywayConfig.getLocations());
