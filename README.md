@@ -26,7 +26,8 @@ Flyway Ant plugin provided as an AntLib.
        <!-- include all jars and directories containing compiled java migrations -->
    </path>
 
-   <taskdef uri="antlib:org.flywaydb.ant" resource="org/flywaydb/ant/antlib.xml" classpathref="flyway.lib.path"/>
+   <taskdef uri="antlib:org.flywaydb.ant" resource="org/flywaydb/ant/antlib.xml"
+       classpathref="flyway.lib.path"/>
 </project>
 ```
 
