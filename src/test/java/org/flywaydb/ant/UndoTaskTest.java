@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package org.flywaydb.ant;
+package org.flywaydb.ant;
 
 import java.io.IOException;
 
 import org.apache.tools.ant.AntAssert;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
-import org.flywaydb.core.internal.exception.FlywayProUpgradeRequiredException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
