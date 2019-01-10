@@ -32,11 +32,10 @@
     </dependencySets>
     <fileSets>
         <fileSet>
-            <directory>..</directory>
-            <outputDirectory>/</outputDirectory>
+            <directory>/</directory>
             <includes>
-                <include>LICENSE.txt</include>
-                <include>README.txt</include>
+                <include>LICENSE</include>
+                <include>README.md</include>
             </includes>
         </fileSet>
     </fileSets>
