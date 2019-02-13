@@ -511,6 +511,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param oracleSqlplusWarn TODO add description
+     */
+    public void setOracleSqlplusWarn(boolean oracleSqlplusWarn) {
+        this.flywayConfig.oracleSqlplus(oracleSqlplusWarn);
+    }
+
+    /**
      * @param licenseKey Flyway's license key. (default: *blank*)<br>Also configurable with Ant Property: ${flyway.licenseKey}
      */
     public void setLicenseKey(String licenseKey) {
