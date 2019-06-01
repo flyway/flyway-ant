@@ -25,14 +25,14 @@
     </formats>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>${basedir}</outputDirectory>
             <useTransitiveFiltering>true</useTransitiveFiltering>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>
     <fileSets>
         <fileSet>
-            <directory>/</directory>
+            <directory>${basedir}</directory>
             <includes>
                 <include>LICENSE</include>
                 <include>README.md</include>
