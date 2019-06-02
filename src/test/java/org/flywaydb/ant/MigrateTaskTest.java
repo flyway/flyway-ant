@@ -15,8 +15,9 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntAssert;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MigrateTaskTest extends AbstractAntTest {
 
@@ -24,8 +25,8 @@ public class MigrateTaskTest extends AbstractAntTest {
 
     @Test
     public void basicTest() {
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("Successfully validated 1 migration", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("Successfully validated 1 migration");
     }
 
     @Test
@@ -33,7 +34,7 @@ public class MigrateTaskTest extends AbstractAntTest {
         // there are no migrations with such a suffix
         setAntProperty("flyway.sqlMigrationSuffixes", ".xxx");
 
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("No migrations found", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("No migrations found");
     }
 }

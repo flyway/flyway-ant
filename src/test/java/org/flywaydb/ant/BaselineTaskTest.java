@@ -15,8 +15,9 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntAssert;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BaselineTaskTest extends AbstractAntTest {
 
@@ -24,7 +25,7 @@ public class BaselineTaskTest extends AbstractAntTest {
 
     @Test
     public void basicTest() {
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("Successfully baselined schema with version: 1", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("Successfully baselined schema with version: 1");
     }
 }

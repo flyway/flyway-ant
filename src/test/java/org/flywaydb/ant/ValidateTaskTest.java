@@ -15,8 +15,9 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntAssert;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ValidateTaskTest extends AbstractAntTest {
 
@@ -24,7 +25,7 @@ public class ValidateTaskTest extends AbstractAntTest {
 
     @Test
     public void basicTest() {
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("Successfully validated 1 migration", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("Successfully validated 1 migration");
     }
 }

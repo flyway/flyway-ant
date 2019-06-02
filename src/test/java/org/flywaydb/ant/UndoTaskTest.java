@@ -15,9 +15,10 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntAssert;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test doesn't do much because the `undo` task is available only with Flyway Pro.
@@ -29,7 +30,7 @@ public class UndoTaskTest extends AbstractAntTest {
 
     @Test
     public void basicTest() {
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("UNDO", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("UNDO");
     }
 }

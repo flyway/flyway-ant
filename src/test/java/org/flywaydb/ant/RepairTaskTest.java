@@ -15,8 +15,9 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntAssert;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class RepairTaskTest extends AbstractAntTest {
 
@@ -24,7 +25,7 @@ public class RepairTaskTest extends AbstractAntTest {
 
     @Test
     public void basicTest() {
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("Successfully repaired schema history table", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("Successfully repaired schema history table");
     }
 }

@@ -15,8 +15,9 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntAssert;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CleanTaskTest extends AbstractAntTest {
 
@@ -24,7 +25,7 @@ public class CleanTaskTest extends AbstractAntTest {
 
     @Test
     public void basicTest() {
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("Successfully cleaned schema", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("Successfully cleaned schema");
     }
 }

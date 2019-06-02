@@ -15,8 +15,9 @@
  */
 package org.flywaydb.ant;
 
-import org.apache.tools.ant.AntAssert;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InfoTaskTest extends AbstractAntTest {
 
@@ -24,8 +25,8 @@ public class InfoTaskTest extends AbstractAntTest {
 
     @Test
     public void basicTest() {
-        String log = execute(TARGET_NAME);
-        AntAssert.assertContains("| Category  | Version | Description  | Type | Installed On | State   |", log);
-        AntAssert.assertContains("| Versioned | 1       | create table | SQL  |              | Pending |", log);
+        assertThat(execute(TARGET_NAME))
+                .contains("| Category  | Version | Description  | Type | Installed On | State   |")
+                .contains("| Versioned | 1       | create table | SQL  |              | Pending |");
     }
 }
