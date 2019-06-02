@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package org.flywaydb.ant;
-
-import java.io.IOException;
+package org.flywaydb.ant;
 
 import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Path;
 
 public class MigrateTaskTest extends AbstractAntTest {
 
@@ -30,12 +30,10 @@ public class MigrateTaskTest extends AbstractAntTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    @Before
-    public void setUp() throws IOException {
-        configure(buildRule, temporaryFolder.newFile().getAbsolutePath());
+    @BeforeEach
+    public void setUp(@TempDir Path temporaryFolder) {
+        configure(buildRule, temporaryFolder.toAbsolutePath().toString());
     }
 
     @Override

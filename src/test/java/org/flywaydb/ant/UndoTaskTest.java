@@ -15,31 +15,30 @@
  */
 package org.flywaydb.ant;
 
-import java.io.IOException;
-
 import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildFileRule;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Path;
 
 /**
  * This test doesn't do much because the `undo` task is available only with Flyway Pro.
  */
+@Disabled
 public class UndoTaskTest extends AbstractAntTest {
 
     private static final String TARGET_NAME = "undo-test";
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
-    @Before
-    public void setUp() throws IOException {
-        configure(buildRule, temporaryFolder.newFile().getAbsolutePath());
+    @BeforeEach
+    public void setUp(@TempDir Path temporaryFolder) {
+        configure(buildRule, temporaryFolder.toAbsolutePath().toString());
     }
 
     @Override
@@ -47,7 +46,6 @@ public class UndoTaskTest extends AbstractAntTest {
         return buildRule;
     }
 
-    @Ignore
     @Test
     public void basicTest() {
         String log = execute(TARGET_NAME);

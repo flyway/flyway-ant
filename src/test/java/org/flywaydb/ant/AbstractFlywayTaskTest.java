@@ -15,11 +15,11 @@
  */
 package org.flywaydb.ant;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractFlywayTaskTest {
 
@@ -28,13 +28,13 @@ public class AbstractFlywayTaskTest {
         String root = File.listRoots()[0].getPath().toLowerCase();
 
         File baseDir = new File("/tempo");
-        assertEquals("db/migration",
-                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "db/migration").toLowerCase());
+        assertThat(AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "db/migration").toLowerCase())
+                .isEqualTo("db/migration");
 
-        assertEquals("filesystem:" + root + "test/migration",
-                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:" + root + "test/migration").toLowerCase());
+        assertThat(AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:" + root + "test/migration").toLowerCase())
+                .isEqualTo("filesystem:" + root + "test/migration");
 
-        assertEquals("filesystem:" + root + "tempo/test" + File.separator + "migration",
-                     AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:test/migration").toLowerCase());
+        assertThat(AbstractFlywayTask.adjustRelativeFileSystemLocationToBaseDir(baseDir, "filesystem:test/migration").toLowerCase())
+                .isEqualTo("filesystem:" + root + "tempo/test" + File.separator + "migration");
     }
 }
