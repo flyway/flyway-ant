@@ -16,23 +16,34 @@
 package org.flywaydb.ant;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.Path;
 
 abstract class AbstractAntTest {
 
-    protected void configure(BuildFileRule buildRule, String dbFilename) {
-        buildRule.configureProject(AbstractAntTest.class.getResource("/" + getBuildFilename()).getFile());
+    private BuildFileRule buildFile;
 
-        buildRule.getProject().setProperty("db", dbFilename);
+    @BeforeEach
+    void setUp(@TempDir Path temporaryFolder) {
+        buildFile = new BuildFileRule();
+
+        buildFile.configureProject(this.getClass().getResource("/" + getBuildFilename()).getFile());
+
+        setAntProperty("db", temporaryFolder.toAbsolutePath().toString());
     }
 
     protected String getBuildFilename() {
         return "ant-build.xml";
     }
 
-    abstract protected BuildFileRule getBuildFileRule();
+    protected final String execute(String targetName) {
+        buildFile.executeTarget(targetName);
+        return buildFile.getLog();
+    }
 
-    protected String execute(String targetName) {
-        getBuildFileRule().executeTarget(targetName);
-        return getBuildFileRule().getLog();
+    protected final void setAntProperty(String name, String value) {
+        buildFile.getProject().setProperty(name, value);
     }
 }

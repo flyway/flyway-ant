@@ -16,30 +16,11 @@
 package org.flywaydb.ant;
 
 import org.apache.tools.ant.AntAssert;
-import org.apache.tools.ant.BuildFileRule;
-import org.junit.Rule;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
-import java.nio.file.Path;
 
 public class MigrateTaskTest extends AbstractAntTest {
 
     private static final String TARGET_NAME = "migrate-test";
-
-    @Rule
-    public final BuildFileRule buildRule = new BuildFileRule();
-
-    @BeforeEach
-    public void setUp(@TempDir Path temporaryFolder) {
-        configure(buildRule, temporaryFolder.toAbsolutePath().toString());
-    }
-
-    @Override
-    protected BuildFileRule getBuildFileRule() {
-        return buildRule;
-    }
 
     @Test
     public void basicTest() {
@@ -50,7 +31,7 @@ public class MigrateTaskTest extends AbstractAntTest {
     @Test
     public void noMigrationsTest() {
         // there are no migrations with such a suffix
-        buildRule.getProject().setProperty("flyway.sqlMigrationSuffixes", ".xxx");
+        setAntProperty("flyway.sqlMigrationSuffixes", ".xxx");
 
         String log = execute(TARGET_NAME);
         AntAssert.assertContains("No migrations found", log);
