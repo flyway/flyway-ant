@@ -1,3 +1,5 @@
+*Actually*: Because of this [issue](https://github.com/flyway/flyway/issues/2467) I'm waiting for the next Flyway release for a new plugin version to be released.
+
 #  Flyway Ant Tasks
 
 Flyway Ant plugin provided as an AntLib.
