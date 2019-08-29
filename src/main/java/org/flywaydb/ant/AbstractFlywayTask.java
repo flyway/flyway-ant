@@ -505,16 +505,19 @@ public abstract class AbstractFlywayTask extends Task {
     /**
      * @param oracleSqlplus Whether to Flyway's support for Oracle SQL*Plus commands should be activated. (default: *false*)<br>Also configurable with Ant
      *                      Property: ${flyway.oracleSqlplus}
+     *                      <br><i>Flyway Pro and Flyway Enterprise only</i>
      */
     public void setOracleSqlplus(boolean oracleSqlplus) {
         this.flywayConfig.oracleSqlplus(oracleSqlplus);
     }
 
     /**
-     * @param oracleSqlplusWarn TODO add description
+     * @param oracleSqlplusWarn Whether Flyway should issue a warning instead of an error whenever it encounters an Oracle SQL*Plus statement it doesn't yet
+     *                          support. (default: *false*)<br>Also configurable with Ant Property: ${flyway.oracleSqlplusWarn}
+     *                          <br><i>Flyway Pro and Flyway Enterprise only</i>
      */
     public void setOracleSqlplusWarn(boolean oracleSqlplusWarn) {
-        this.flywayConfig.oracleSqlplus(oracleSqlplusWarn);
+        this.flywayConfig.oracleSqlplusWarn(oracleSqlplusWarn);
     }
 
     /**
