@@ -276,6 +276,7 @@ public abstract class AbstractFlywayTask extends Task {
      * over the network to the database, instead of sending each statement individually. This is particularly useful for very large SQL migrations composed of
      * multiple MB or even GB of reference data, as this can dramatically reduce the network overhead. This is supported for INSERT, UPDATE, DELETE, MERGE and
      * UPSERT statements. All other statements are automatically executed without batching.
+     * <br><i>Flyway Pro and Flyway Enterprise only</i>
      * <p>
      * Also configurable with Ant Property: ${flyway.batch}
      *
