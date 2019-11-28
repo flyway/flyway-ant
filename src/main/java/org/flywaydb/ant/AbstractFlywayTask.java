@@ -180,6 +180,14 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param defaultSchema Sets the default schema managed by Flyway. If not specified, but flyway.schemas is, we use the first schema in that list.
+     *                      Also configurable with Ant Property: ${flyway.defaultSchema}
+     */
+    public void setDefaultSchema(String defaultSchema) {
+        this.flywayConfig.defaultSchema(defaultSchema);
+    }
+
+    /**
      * @param resolvers The custom MigrationResolvers to be used in addition to the built-in ones for resolving Migrations to apply. <p>(default: none)</p>
      */
     public void setResolvers(String resolvers) {
