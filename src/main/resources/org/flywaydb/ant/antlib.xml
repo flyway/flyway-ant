@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <!--
-
-    Copyright 2010-2019 Boxfuse GmbH
+    Copyright 2017-2020 Tomas Tulka
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -14,7 +13,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
 -->
 <antlib>
     <taskdef name="clean" classname="org.flywaydb.ant.CleanTask"/>
