@@ -367,6 +367,17 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * <p>Whether to ignore migration files whose names do not match the naming conventions.</p>
+     * <p>If false, files with invalid names are ignored and Flyway continues normally. If true, Flyway fails fast and lists the offending files.</p>
+     *
+     * @param validateMigrationNaming Whether to ignore migration files whose names do not match the naming conventions. (default: false)<br>Also configurable
+     *                                with Ant Property: ${flyway.validateMigrationNaming}
+     */
+    public void setValidateMigrationNaming(boolean validateMigrationNaming) {
+        this.flywayConfig.validateMigrationNaming(validateMigrationNaming);
+    }
+
+    /**
      * @param target The target version up to which Flyway should consider migrations. Migrations with a higher version number will be ignored. The special
      *               value {@code current} designates the current version of the schema. (default: the latest version)<br>Also configurable with Ant Property:
      *               ${flyway.target}
