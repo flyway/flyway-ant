@@ -19,7 +19,7 @@
 
     <groupId>cz.net21.flyway.ant</groupId>
     <artifactId>flyway-ant</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1</version>
     <packaging>jar</packaging>
 
     <name>Flyway Ant Tasks</name>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>6.2.0</version>
+            <version>6.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>
