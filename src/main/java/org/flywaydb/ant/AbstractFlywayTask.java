@@ -180,6 +180,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param createSchemas Whether Flyway should attempt to create the schemas specified in the schemas property.<p>(default: true)</p><p>Also configurable with Ant Property: ${flyway.createSchemas}</p>
+     */
+    public void setCreateSchemas(boolean createSchemas) {
+        this.flywayConfig.createSchemas(createSchemas);
+    }
+
+    /**
      * @param defaultSchema Sets the default schema managed by Flyway. If not specified, but flyway.schemas is, we use the first schema in that list.
      *                      Also configurable with Ant Property: ${flyway.defaultSchema}
      */
