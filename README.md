@@ -8,7 +8,7 @@ Flyway Ant plugin provided as an AntLib.
 <dependency>
     <groupId>cz.net21.flyway.ant</groupId>
     <artifactId>flyway-ant</artifactId>
-    <version>1.9.4</version>
+    <version>1.9.5</version>
 </dependency>
 ```
 
