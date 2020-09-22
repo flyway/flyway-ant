@@ -40,13 +40,13 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>6.5.5</version>
+            <version>6.5.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>cz.net21.flyway.ant</groupId>
             <artifactId>flyway-ant</artifactId>
-            <version>1.9.5</version>
+            <version>1.9.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -59,13 +59,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.6.2</version>
+            <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.16.1</version>
+            <version>3.17.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
