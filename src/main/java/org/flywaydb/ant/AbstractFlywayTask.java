@@ -180,15 +180,16 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param createSchemas Whether Flyway should attempt to create the schemas specified in the schemas property.<p>(default: true)</p><p>Also configurable with Ant Property: ${flyway.createSchemas}</p>
+     * @param createSchemas Whether Flyway should attempt to create the schemas specified in the schemas property.<p>(default: true)</p><p>Also configurable
+     *                      with Ant Property: ${flyway.createSchemas}</p>
      */
     public void setCreateSchemas(boolean createSchemas) {
         this.flywayConfig.createSchemas(createSchemas);
     }
 
     /**
-     * @param defaultSchema Sets the default schema managed by Flyway. If not specified, but flyway.schemas is, we use the first schema in that list.
-     *                      Also configurable with Ant Property: ${flyway.defaultSchema}
+     * @param defaultSchema Sets the default schema managed by Flyway. If not specified, but flyway.schemas is, we use the first schema in that list. Also
+     *                      configurable with Ant Property: ${flyway.defaultSchema}
      */
     public void setDefaultSchema(String defaultSchema) {
         this.flywayConfig.defaultSchema(defaultSchema);
@@ -291,9 +292,7 @@ public abstract class AbstractFlywayTask extends Task {
      * over the network to the database, instead of sending each statement individually. This is particularly useful for very large SQL migrations composed of
      * multiple MB or even GB of reference data, as this can dramatically reduce the network overhead. This is supported for INSERT, UPDATE, DELETE, MERGE and
      * UPSERT statements. All other statements are automatically executed without batching.
-     * <br><i>Flyway Pro and Flyway Enterprise only</i>
-     * <p>
-     * Also configurable with Ant Property: ${flyway.batch}
+     * <br><i>Flyway Teams only</i>
      *
      * @param batch {@code true} if SQL statements should be batched. {@code false} if they should be sent individually instead. (default: {@code false})
      */
@@ -382,6 +381,16 @@ public abstract class AbstractFlywayTask extends Task {
      */
     public void setValidateMigrationNaming(boolean validateMigrationNaming) {
         this.flywayConfig.validateMigrationNaming(validateMigrationNaming);
+    }
+
+    /**
+     * <p>The tablespace where to create the schema history table that will be used by Flyway.</p>
+     * <p>This setting is only relevant for databases that do support the notion of tablespaces. Its value is simply ignored for all others.</p>
+     *
+     * @param tablespace where to create the schema history table
+     */
+    public void setTablespace(String tablespace) {
+        this.flywayConfig.tablespace(tablespace);
     }
 
     /**
@@ -515,7 +524,7 @@ public abstract class AbstractFlywayTask extends Task {
 
     /**
      * @param errorOverrides Rules for the built-in error handling that lets you override specific SQL states and errors codes from error to warning or from
-     *                       warning to error, comma-separated. (default: *blank*)<br>Also configurable with Ant Property: ${flyway.errorOverrides}
+     *                       warning to error, comma-separated. (default: *blank*)<br>Also configurable with Ant Property: ${flyway.errorOverrides}<br><i>Flyway Teams only</i>
      */
     public void setErrorOverrides(String errorOverrides) {
         this.flywayConfig.errorOverrides(StringUtils.tokenizeToStringArray(errorOverrides, ","));
@@ -523,16 +532,38 @@ public abstract class AbstractFlywayTask extends Task {
 
     /**
      * @param dryRunOutput The file where to output the SQL statements of a migration dry run. (default: *Execute directly against the database*)<br>Also
-     *                     configurable with Ant Property: ${flyway.dryRunOutput}
+     *                     configurable with Ant Property: ${flyway.dryRunOutput}<br><i>Flyway Teams only</i>
      */
     public void setDryRunOutput(String dryRunOutput) {
         this.flywayConfig.dryRunOutput(dryRunOutput);
     }
 
     /**
+     * @param cherryPicks A Comma separated list of migrations that Flyway should consider when migrating, undoing, or repairing. Leave blank to consider all
+     *                    discovered migrations. <br><i>Flyway Teams only</i>
+     */
+    public void setCherryPick(String cherryPicks) {
+        this.flywayConfig.cherryPick(StringUtils.tokenizeToStringArray(cherryPicks, ","));
+    }
+
+    /**
+     * @param outputQueryResults Controls whether Flyway should output a table with the results of queries when executing migrations.<br><i>Flyway Teams only</i>
+     */
+    public void setOutputQueryResults(boolean outputQueryResults) {
+        // FIXME not possible with the current api
+        //this.flywayConfig.outputQueryResults(outputQueryResults);
+    }
+
+    /**
+     * @param skipExecutingMigrations Whether Flyway should skip actually executing the contents of the migrations and only update the schema history table. <br><i>Flyway Teams only</i>
+     */
+    public void setSkipExecutingMigrations(boolean skipExecutingMigrations) {
+        this.flywayConfig.skipExecutingMigrations(skipExecutingMigrations);
+    }
+
+    /**
      * @param oracleSqlplus Whether to Flyway's support for Oracle SQL*Plus commands should be activated. (default: *false*)<br>Also configurable with Ant
-     *                      Property: ${flyway.oracleSqlplus}
-     *                      <br><i>Flyway Pro and Flyway Enterprise only</i>
+     *                      Property: ${flyway.oracleSqlplus}<br><i>Flyway Teams only</i>
      */
     public void setOracleSqlplus(boolean oracleSqlplus) {
         this.flywayConfig.oracleSqlplus(oracleSqlplus);
@@ -541,7 +572,7 @@ public abstract class AbstractFlywayTask extends Task {
     /**
      * @param oracleSqlplusWarn Whether Flyway should issue a warning instead of an error whenever it encounters an Oracle SQL*Plus statement it doesn't yet
      *                          support. (default: *false*)<br>Also configurable with Ant Property: ${flyway.oracleSqlplusWarn}
-     *                          <br><i>Flyway Pro and Flyway Enterprise only</i>
+     *                          <br><i>Flyway Teams only</i>
      */
     public void setOracleSqlplusWarn(boolean oracleSqlplusWarn) {
         this.flywayConfig.oracleSqlplusWarn(oracleSqlplusWarn);

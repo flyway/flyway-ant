@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * This test doesn't do much because the `undo` task is available only with Flyway Pro.
+ * This test doesn't do much because the `undo` task is available only with Flyway Teams.
  */
 @Disabled
 public class UndoTaskTest extends AbstractAntTest {
