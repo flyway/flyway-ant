@@ -44,10 +44,16 @@ import org.flywaydb.core.internal.util.StringUtils;
  */
 @SuppressWarnings({"UnusedDeclaration"})
 public abstract class AbstractFlywayTask extends Task {
+
     /**
      * Property name prefix for placeholders that are configured through properties.
      */
     private static final String PLACEHOLDERS_PROPERTY_PREFIX = "flyway.placeholders.";
+
+    /**
+     * Property name prefix for JDBC properties that are configured through properties.
+     */
+    private static final String JDBC_PROPERTIES_PREFIX = "flyway.jdbcProperties.";
 
     /**
      * Flyway Configuration.
@@ -106,6 +112,11 @@ public abstract class AbstractFlywayTask extends Task {
      * A map of &lt;placeholder, replacementValue&gt; to apply to sql migration scripts.
      */
     private Map<String, String> placeholders;
+
+    /**
+     * A map of JDBC properties to pass to the JDBC driver when establishing a connection.
+     */
+    private Map<String, String> jdbcProperties;
 
     /**
      * @param classpath The classpath used to load the JDBC driver and the migrations.<br>Also configurable with Ant Property: ${flyway.classpath}
@@ -524,7 +535,8 @@ public abstract class AbstractFlywayTask extends Task {
 
     /**
      * @param errorOverrides Rules for the built-in error handling that lets you override specific SQL states and errors codes from error to warning or from
-     *                       warning to error, comma-separated. (default: *blank*)<br>Also configurable with Ant Property: ${flyway.errorOverrides}<br><i>Flyway Teams only</i>
+     *                       warning to error, comma-separated. (default: *blank*)<br>Also configurable with Ant Property: ${flyway.errorOverrides}<br><i>Flyway
+     *                       Teams only</i>
      */
     public void setErrorOverrides(String errorOverrides) {
         this.flywayConfig.errorOverrides(StringUtils.tokenizeToStringArray(errorOverrides, ","));
@@ -547,7 +559,8 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param outputQueryResults Controls whether Flyway should output a table with the results of queries when executing migrations.<br><i>Flyway Teams only</i>
+     * @param outputQueryResults Controls whether Flyway should output a table with the results of queries when executing migrations.<br><i>Flyway Teams
+     *                           only</i>
      */
     public void setOutputQueryResults(boolean outputQueryResults) {
         // FIXME not possible with the current api
@@ -555,7 +568,8 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param skipExecutingMigrations Whether Flyway should skip actually executing the contents of the migrations and only update the schema history table. <br><i>Flyway Teams only</i>
+     * @param skipExecutingMigrations Whether Flyway should skip actually executing the contents of the migrations and only update the schema history table.
+     *                                <br><i>Flyway Teams only</i>
      */
     public void setSkipExecutingMigrations(boolean skipExecutingMigrations) {
         this.flywayConfig.skipExecutingMigrations(skipExecutingMigrations);
@@ -592,6 +606,15 @@ public abstract class AbstractFlywayTask extends Task {
      */
     public void addConfiguredPlaceholders(PlaceholdersElement placeholders) {
         this.placeholders = placeholders.placeholders;
+    }
+
+    /**
+     * Adds jdbcProperty from a nested &lt;jdbcProperties&gt; element. Called by Ant.
+     *
+     * @param jdbcProperties The fully configured placeholders element.
+     */
+    public void addConfiguredJdbcProperties(JdbcPropertiesElement jdbcProperties) {
+        this.jdbcProperties = jdbcProperties.jdbcProperties;
     }
 
     /**
@@ -730,6 +753,7 @@ public abstract class AbstractFlywayTask extends Task {
 
             flywayConfig.locations(getLocations());
             flywayConfig.placeholders(loadPlaceholdersFromProperties(flywayConfig.getPlaceholders(), getProject().getProperties()));
+            flywayConfig.jdbcProperties(loadJdbcPropertiesFromProperties(flywayConfig.getJdbcProperties(), getProject().getProperties()));
 
             doExecute(flywayConfig.load());
 
@@ -799,14 +823,32 @@ public abstract class AbstractFlywayTask extends Task {
         Map<String, String> placeholders = new HashMap<String, String>(currentPlaceholders);
         for (Object property : properties.keySet()) {
             String propertyName = (String) property;
-            if (propertyName.startsWith(PLACEHOLDERS_PROPERTY_PREFIX)
-                && propertyName.length() > PLACEHOLDERS_PROPERTY_PREFIX.length()) {
-                String placeholderName = propertyName.substring(PLACEHOLDERS_PROPERTY_PREFIX.length());
-                String placeholderValue = (String) properties.get(propertyName);
-                placeholders.put(placeholderName, placeholderValue);
+            if (propertyName.startsWith(PLACEHOLDERS_PROPERTY_PREFIX) && propertyName.length() > PLACEHOLDERS_PROPERTY_PREFIX.length()) {
+                String name = propertyName.substring(PLACEHOLDERS_PROPERTY_PREFIX.length());
+                String value = (String) properties.get(propertyName);
+                placeholders.put(name, value);
             }
         }
         return placeholders;
+    }
+
+    /**
+     * Load the JDBC properties contained in these properties.
+     *
+     * @param currentJdbcProperties The current JDBC properties map.
+     * @param properties            The properties containing additional JDBC properties.
+     */
+    private static Map<String, String> loadJdbcPropertiesFromProperties(Map<String, String> currentJdbcProperties, Hashtable properties) {
+        Map<String, String> jdbcProperties = new HashMap<String, String>(currentJdbcProperties);
+        for (Object property : properties.keySet()) {
+            String propertyName = (String) property;
+            if (propertyName.startsWith(JDBC_PROPERTIES_PREFIX) && propertyName.length() > JDBC_PROPERTIES_PREFIX.length()) {
+                String name = propertyName.substring(JDBC_PROPERTIES_PREFIX.length());
+                String value = (String) properties.get(propertyName);
+                jdbcProperties.put(name, value);
+            }
+        }
+        return jdbcProperties;
     }
 
     /**
@@ -1003,6 +1045,54 @@ public abstract class AbstractFlywayTask extends Task {
 
         /**
          * @param value The value of the placeholder.
+         */
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    /**
+     * Nested &lt;jdbcProperties&gt; element of the migrate Ant task.
+     */
+    public static class JdbcPropertiesElement {
+        /**
+         * A map of JDBC properties to apply to sql migration scripts.
+         */
+        Map<String, String> jdbcProperties = new HashMap<String, String>();
+
+        /**
+         * Adds a jdbc property from a nested element. Called by Ant.
+         *
+         * @param jdbcProperty The fully configured jdbcProperty element.
+         */
+        public void addConfiguredPlaceholder(JdbcPropertyElement jdbcProperty) {
+            jdbcProperties.put(jdbcProperty.name, jdbcProperty.value);
+        }
+    }
+
+    /**
+     * Nested JDBC property element inside the &lt;jdbcProperties&gt; element of the migrate Ant task.
+     */
+    public static class JdbcPropertyElement {
+        /**
+         * The name of the JDBC property.
+         */
+        private String name;
+
+        /**
+         * The value of the JDBC property.
+         */
+        private String value;
+
+        /**
+         * @param name The name of the JDBC property.
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         * @param value The value of the JDBC property.
          */
         public void setValue(String value) {
             this.value = value;
