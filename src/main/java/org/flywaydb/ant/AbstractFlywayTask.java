@@ -610,7 +610,7 @@ public abstract class AbstractFlywayTask extends Task {
         String userValue = useValueIfPropertyNotSet(user, "user");
         String passwordValue = useValueIfPropertyNotSet(password, "password");
 
-        return new DriverDataSource(Thread.currentThread().getContextClassLoader(), driverValue, urlValue, userValue, passwordValue, null);
+        return new DriverDataSource(Thread.currentThread().getContextClassLoader(), driverValue, urlValue, userValue, passwordValue);
     }
 
     /**

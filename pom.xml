@@ -17,10 +17,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cz.net21.flyway.ant</groupId>
+    <groupId>com.ttulka.flyway</groupId>
     <artifactId>flyway-ant</artifactId>
-    <version>1.9.7</version>
-    <packaging>jar</packaging>
+    <version>2.0.0</version>
 
     <name>Flyway Ant Tasks</name>
     <description>Flyway Ant plugin provided as an AntLib.</description>
@@ -37,7 +36,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>6.5.7</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>
@@ -101,18 +100,6 @@
                             <descriptorSourceDirectory>src/main/assembly</descriptorSourceDirectory>
                             <encoding>UTF-8</encoding>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -207,10 +194,6 @@
     </scm>
 
     <developers>
-        <developer>
-            <name>Axel Fontaine</name>
-            <url>https://github.com/axelfontaine</url>
-        </developer>
         <developer>
             <name>Tomas Tulka</name>
             <url>https://github.com/ttulka</url>
