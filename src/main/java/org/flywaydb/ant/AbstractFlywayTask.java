@@ -1071,7 +1071,7 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * Nested JDBC property element inside the &lt;jdbcProperties&gt; element of the migrate Ant task.
+     * Nested &lt;jdbcProperty&gt; element inside the &lt;jdbcProperties&gt; element of the migrate Ant task.
      */
     public static class JdbcPropertyElement {
         /**
