@@ -8,7 +8,7 @@ Flyway Ant plugin provided as an AntLib.
 <dependency>
     <groupId>com.ttulka.flyway</groupId>
     <artifactId>flyway-ant</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -33,14 +33,14 @@ Flyway Ant plugin provided as an AntLib.
 
 ## Tasks
 
-| Name           | Description | 
-| -------------- | ------------|
-| **migrate**    | Migrates the database. |
-| **clean**      | Drops all objects in the configured schemas. |
-| **info**       | Prints the details and status information about all the migrations. |
-| **validate**   | Validates the applied migrations against the ones available on the classpath. |
-| **baseline**   | Baselines an existing database, excluding all migrations up to and including baselineVersion. |
-| **repair**     | Repairs the metadata table. |
+| Name         | Description | 
+| ------------ | ------------|
+| `migrate`    | Migrates the database. |
+| `clean`      | Drops all objects in the configured schemas. |
+| `info`       | Prints the details and status information about all the migrations. |
+| `validate`   | Validates the applied migrations against the ones available on the classpath. |
+| `baseline`   | Baselines an existing database, excluding all migrations up to and including baselineVersion. |
+| `repair`     | Repairs the metadata table. |
 
 ## Configuration
 
