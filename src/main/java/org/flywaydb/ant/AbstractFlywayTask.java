@@ -460,8 +460,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param outputQueryResults Controls whether Flyway should output a table with the results of queries when executing migrations.
      */
     public void setOutputQueryResults(boolean outputQueryResults) {
-        // FIXME not possible with the current api
-        //this.flywayConfig.outputQueryResults(outputQueryResults);
+        this.flywayConfig.outputQueryResults(outputQueryResults);
     }
 
     /**
