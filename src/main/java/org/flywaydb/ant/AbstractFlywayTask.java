@@ -36,7 +36,6 @@ import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.api.logging.Log;
 import org.flywaydb.core.api.logging.LogFactory;
 import org.flywaydb.core.internal.jdbc.DriverDataSource;
-import org.flywaydb.core.internal.license.FlywayTeamsUpgradeRequiredException;
 import org.flywaydb.core.internal.util.ExceptionUtils;
 import org.flywaydb.core.internal.util.StringUtils;
 
@@ -645,7 +644,7 @@ public abstract class AbstractFlywayTask extends Task {
             flywayConfig.placeholders(loadPlaceholdersFromProperties(flywayConfig.getPlaceholders(), getProject().getProperties()));
 
             // jdbc properties only for the licensed version
-            Map<String, String> jdbcProperties = loadJdbcPropertiesFromProperties(getJdbcPropertiesSafely(), getProject().getProperties());
+            Map<String, String> jdbcProperties = loadJdbcPropertiesFromProperties(flywayConfig.getJdbcProperties(), getProject().getProperties());
             if (!jdbcProperties.isEmpty()) {
                 flywayConfig.jdbcProperties(jdbcProperties);
             }
@@ -664,17 +663,6 @@ public abstract class AbstractFlywayTask extends Task {
      * @throws Exception any exception
      */
     protected abstract void doExecute(Flyway flyway) throws Exception;
-
-    /**
-     * This must be done due to licensing, as the free variant throws an exception.
-     */
-    private Map<String, String> getJdbcPropertiesSafely() {
-        try {
-            return flywayConfig.getJdbcProperties();
-        } catch (FlywayTeamsUpgradeRequiredException ignore) {
-        }
-        return new HashMap<>();
-    }
 
     /**
      * @return The locations configured through Ant.
@@ -726,7 +714,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param properties          The properties containing additional placeholders.
      */
     private static Map<String, String> loadPlaceholdersFromProperties(Map<String, String> currentPlaceholders, Hashtable properties) {
-        Map<String, String> placeholders = new HashMap<String, String>(currentPlaceholders);
+        Map<String, String> placeholders = currentPlaceholders != null ? new HashMap<>(currentPlaceholders) : new HashMap<>();
         for (Object property : properties.keySet()) {
             String propertyName = (String) property;
             if (propertyName.startsWith(PLACEHOLDERS_PROPERTY_PREFIX) && propertyName.length() > PLACEHOLDERS_PROPERTY_PREFIX.length()) {
@@ -745,7 +733,7 @@ public abstract class AbstractFlywayTask extends Task {
      * @param properties            The properties containing additional JDBC properties.
      */
     private static Map<String, String> loadJdbcPropertiesFromProperties(Map<String, String> currentJdbcProperties, Hashtable properties) {
-        Map<String, String> jdbcProperties = new HashMap<>(currentJdbcProperties);
+        Map<String, String> jdbcProperties = currentJdbcProperties != null ? new HashMap<>(currentJdbcProperties) : new HashMap<>();
         for (Object property : properties.keySet()) {
             String propertyName = (String) property;
             if (propertyName.startsWith(JDBC_PROPERTIES_PREFIX) && propertyName.length() > JDBC_PROPERTIES_PREFIX.length()) {
