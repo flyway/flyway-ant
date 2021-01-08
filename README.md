@@ -95,6 +95,15 @@ System properties *override* Ant properties *override* Task attributes.
 
 For more details see the [Wiki pages](https://github.com/flyway/flyway-ant/wiki).
 
+## Maintenance
+This repository is a community project and not officially maintained by the Flyway Team at Redgate.
+This project is looked after only by the open source community. Community Maintainers are people who have agreed to be contacted with queries for support and maintenance.
+Community Maintainers: 
+- [@ttulka](https://github.com/ttulka)
+
+If you would like to be named as an Community Maintainer, let us know via Twitter: https://twitter.com/flywaydb.
+
+
 ## License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
