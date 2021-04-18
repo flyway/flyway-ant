@@ -419,6 +419,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param ignoreMigrationPatterns (Flyway Teams) Ignore specified migrations during validate.
+     */
+    public void setIgnoreMigrationPatterns(String ignoreMigrationPatterns) {
+        this.flywayConfig.ignoreMigrationPatterns(ignoreMigrationPatterns);
+    }
+
+    /**
      * @param validateOnMigrate Whether to automatically call validate or not when running migrate. (default: true)
      */
     public void setValidateOnMigrate(boolean validateOnMigrate) {
