@@ -426,6 +426,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param failOnMissingLocations Whether to fail if a location specified in the flyway.locations option doesn't exist. (default: false)
+     */
+    public void setFailOnMissingLocations(boolean failOnMissingLocations) {
+        this.flywayConfig.failOnMissingLocations(failOnMissingLocations);
+    }
+
+    /**
      * @param validateOnMigrate Whether to automatically call validate or not when running migrate. (default: true)
      */
     public void setValidateOnMigrate(boolean validateOnMigrate) {
