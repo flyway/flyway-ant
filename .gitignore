@@ -14,3 +14,4 @@ target
 *.h2.db
 .DS_Store
 .versionsBackup
+.vscode
