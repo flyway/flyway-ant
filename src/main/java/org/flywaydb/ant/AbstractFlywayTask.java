@@ -623,7 +623,7 @@ public abstract class AbstractFlywayTask extends Task {
     @Override
     public void init() throws BuildException {
         AntLogCreator.INSTANCE.setAntProject(getProject());
-        LogFactory.setLogCreator(AntLogCreator.INSTANCE);
+        LogFactory.setFallbackLogCreator(AntLogCreator.INSTANCE);
         log = LogFactory.getLog(getClass());
 
         prepareClassPath();
@@ -646,6 +646,8 @@ public abstract class AbstractFlywayTask extends Task {
 
             // last, load configuration from build script properties
             flywayConfig.dataSource(createDataSource());
+
+//            flywayConfig.loggers("console");
 
             if (resolvers != null) {
                 flywayConfig.resolvers(resolvers);
