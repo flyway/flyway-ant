@@ -24,34 +24,47 @@ import org.flywaydb.core.api.logging.Log;
  */
 public class AntLog implements Log {
 
+    @Override
     public void debug(String message) {
         Project antProject = AntLogCreator.INSTANCE.getAntProject();
         Task task = antProject.getThreadTask(Thread.currentThread());
-        antProject.log(task, message, Project.MSG_VERBOSE);
+        antProject.log(task, message, Project.MSG_DEBUG);
     }
 
+    @Override
     public void info(String message) {
         Project antProject = AntLogCreator.INSTANCE.getAntProject();
         Task task = antProject.getThreadTask(Thread.currentThread());
         antProject.log(task, message, Project.MSG_INFO);
     }
 
+    @Override
     public void warn(String message) {
         Project antProject = AntLogCreator.INSTANCE.getAntProject();
         Task task = antProject.getThreadTask(Thread.currentThread());
         antProject.log(task, message, Project.MSG_WARN);
     }
 
+    @Override
     public void error(String message) {
         Project antProject = AntLogCreator.INSTANCE.getAntProject();
         Task task = antProject.getThreadTask(Thread.currentThread());
         antProject.log(task, message, Project.MSG_ERR);
     }
 
+    @Override
     public void error(String message, Exception e) {
         Project antProject = AntLogCreator.INSTANCE.getAntProject();
         Task task = antProject.getThreadTask(Thread.currentThread());
-        antProject.log(task, message, e, Project.MSG_ERR);
+        antProject.log(task, message, e, Project.MSG_INFO);
+    }
+
+    @Override
+    public void notice(String message) {
+        Project antProject = AntLogCreator.INSTANCE.getAntProject();
+        Task task = antProject.getThreadTask(Thread.currentThread());
+        antProject.log(task, message, Project.MSG_VERBOSE);
+        
     }
 
     public boolean isDebugEnabled() {
