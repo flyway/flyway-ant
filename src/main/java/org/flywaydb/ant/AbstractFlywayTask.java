@@ -389,6 +389,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param placeholderSeparator The separator of every placeholder. (default: :)
+     */
+    public void setPlaceholderSeparator(String placeholderSeparator) {
+        this.flywayConfig.placeholderSeparator(placeholderSeparator);
+    }
+
+    /**
      * @param ignoreMissingMigrations true to continue normally and log a warning, false to fail fast with an exception. (default: false)
      */
     public void setIgnoreMissingMigrations(boolean ignoreMissingMigrations) {
