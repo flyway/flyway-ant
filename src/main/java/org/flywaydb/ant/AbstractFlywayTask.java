@@ -396,40 +396,10 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param ignoreMissingMigrations true to continue normally and log a warning, false to fail fast with an exception. (default: false)
-     */
-    public void setIgnoreMissingMigrations(boolean ignoreMissingMigrations) {
-        this.flywayConfig.ignoreMissingMigrations(ignoreMissingMigrations);
-    }
-
-    /**
-     * Ignore ignored migrations when reading the schema history table.
-     *
-     * @param ignoreIgnoredMigrations true to continue normally and log a warning, false to fail fast with an exception. (default: false)
-     */
-    public void setIgnoreIgnoredMigrations(boolean ignoreIgnoredMigrations) {
-        this.flywayConfig.ignoreIgnoredMigrations(ignoreIgnoredMigrations);
-    }
-
-    /**
-     * @param ignorePendingMigrations true Ignore pending migrations when reading the schema history table. (default: false)
-     */
-    public void setIgnorePendingMigrations(boolean ignorePendingMigrations) {
-        this.flywayConfig.ignorePendingMigrations(ignorePendingMigrations);
-    }
-
-    /**
-     * @param ignoreFutureMigrations true to continue normally and log a warning, false to fail fast with an exception. (default: true)
-     */
-    public void setIgnoreFutureMigrations(boolean ignoreFutureMigrations) {
-        this.flywayConfig.ignoreFutureMigrations(ignoreFutureMigrations);
-    }
-
-    /**
      * @param ignoreMigrationPatterns (Flyway Teams) Ignore specified migrations during validate.
      */
     public void setIgnoreMigrationPatterns(String ignoreMigrationPatterns) {
-        this.flywayConfig.ignoreMigrationPatterns(ignoreMigrationPatterns);
+        this.flywayConfig.ignoreMigrationPatterns(StringUtils.tokenizeToStringArray(ignoreMigrationPatterns, ","));
     }
 
     /**

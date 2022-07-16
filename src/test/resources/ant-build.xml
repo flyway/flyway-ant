@@ -63,6 +63,7 @@
         <property name="flyway.url" value="jdbc:h2:${db}"/>
         <property name="flyway.user" value="sa"/>
         <property name="flyway.password" value=""/>
+        <property name="flyway.cleanDisabled" value="false"/>
     </target>
 
 </project>
