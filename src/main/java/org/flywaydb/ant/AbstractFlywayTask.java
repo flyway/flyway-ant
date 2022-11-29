@@ -476,6 +476,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param loggers The loggers Flyway should use. Comma-separated values.
+     */
+    public void setLoggers(String loggers) {
+        this.flywayConfig.loggers(StringUtils.tokenizeToStringArray(loggers, ","));
+    }
+
+    /**
      * @param licenseKey Flyway's license key.
      */
     public void setLicenseKey(String licenseKey) {
@@ -599,10 +606,6 @@ public abstract class AbstractFlywayTask extends Task {
 
     @Override
     public void init() throws BuildException {
-        AntLogCreator.INSTANCE.setAntProject(getProject());
-        LogFactory.setFallbackLogCreator(AntLogCreator.INSTANCE);
-        log = LogFactory.getLog(getClass());
-
         prepareClassPath();
 
         flywayConfig = Flyway.configure(Thread.currentThread().getContextClassLoader());
@@ -624,8 +627,6 @@ public abstract class AbstractFlywayTask extends Task {
             // last, load configuration from build script properties
             flywayConfig.dataSource(createDataSource());
 
-//            flywayConfig.loggers("console");
-
             if (resolvers != null) {
                 flywayConfig.resolvers(resolvers);
             }
@@ -642,7 +643,13 @@ public abstract class AbstractFlywayTask extends Task {
                 flywayConfig.jdbcProperties(jdbcProperties);
             }
 
-            doExecute(flywayConfig.load());
+            // init logger
+            AntLogCreator.INSTANCE.setAntProject(getProject());
+            LogFactory.setFallbackLogCreator(AntLogCreator.INSTANCE);
+            log = LogFactory.getLog(getClass());
+
+            Flyway flyway = flywayConfig.load();
+            doExecute(flyway);
 
         } catch (Exception e) {
             throw new BuildException("Flyway Error: " + e.getMessage(), ExceptionUtils.getRootCause(e));
