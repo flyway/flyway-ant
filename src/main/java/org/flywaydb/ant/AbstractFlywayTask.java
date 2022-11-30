@@ -606,6 +606,9 @@ public abstract class AbstractFlywayTask extends Task {
 
     @Override
     public void init() throws BuildException {
+        AntLogCreator.INSTANCE.setAntProject(getProject());
+        LogFactory.setFallbackLogCreator(AntLogCreator.INSTANCE);
+
         prepareClassPath();
 
         flywayConfig = Flyway.configure(Thread.currentThread().getContextClassLoader());
@@ -643,12 +646,10 @@ public abstract class AbstractFlywayTask extends Task {
                 flywayConfig.jdbcProperties(jdbcProperties);
             }
 
-            // init logger
-            AntLogCreator.INSTANCE.setAntProject(getProject());
-            LogFactory.setFallbackLogCreator(AntLogCreator.INSTANCE);
+            Flyway flyway = flywayConfig.load();
+
             log = LogFactory.getLog(getClass());
 
-            Flyway flyway = flywayConfig.load();
             doExecute(flyway);
 
         } catch (Exception e) {
