@@ -797,7 +797,7 @@ public abstract class AbstractFlywayTask extends Task {
          *
          * @param schema A schema.
          */
-        public void addConfiguredLocation(SchemaElement schema) {
+        public void addConfiguredSchema(SchemaElement schema) {
             schemas.add(schema.name);
         }
     }
@@ -816,7 +816,7 @@ public abstract class AbstractFlywayTask extends Task {
          *
          * @param name The name of the schema.
          */
-        public void setPath(String name) {
+        public void setName(String name) {
             this.name = name;
         }
     }
