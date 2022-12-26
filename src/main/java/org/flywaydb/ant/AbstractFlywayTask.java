@@ -332,6 +332,13 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
+     * @param executeInTransaction Whether SQL execution in a transaction is enabled. (default: false)
+     */
+    public void setExecuteInTransaction(boolean executeInTransaction) {
+        this.flywayConfig.executeInTransaction(executeInTransaction);
+    }
+
+    /**
      * @param tablespace where to create the schema history table.
      */
     public void setTablespace(String tablespace) {
