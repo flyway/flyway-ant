@@ -8,7 +8,7 @@ Flyway Ant plugin provided as an AntLib.
 <dependency>
     <groupId>com.ttulka.flyway</groupId>
     <artifactId>flyway-ant</artifactId>
-    <version>2.19.1</version>
+    <version>2.19.2</version>
 </dependency>
 ```
 
