@@ -8,7 +8,7 @@ Flyway Ant plugin provided as an AntLib.
 <dependency>
     <groupId>com.ttulka.flyway</groupId>
     <artifactId>flyway-ant</artifactId>
-    <version>2.19.3</version>
+    <version>2.19.4</version>
 </dependency>
 ```
 
@@ -17,13 +17,14 @@ Flyway Ant plugin provided as an AntLib.
 ```xml
 <project ... xmlns:flyway="antlib:org.flywaydb.ant">
    <path id="flyway.lib.path">
-       <!-- include all jars from the Flyway AntLib distribution -->
+       <!-- include all JARs from the Flyway AntLib distribution -->
+       <!-- you can find the archive with the JARs at https://github.com/flyway/flyway-ant/releases -->
    </path>
 
    <path id="flyway.classpath">
-       <!-- include all jars containing jdbc drivers -->
-       <!-- include all jars and directories containing sql migrations -->
-       <!-- include all jars and directories containing compiled java migrations -->
+       <!-- include all JARs containing jdbc drivers -->
+       <!-- include all JARs and directories containing sql migrations -->
+       <!-- include all JARs and directories containing compiled java migrations -->
    </path>
 
    <taskdef uri="antlib:org.flywaydb.ant" resource="org/flywaydb/ant/antlib.xml"
