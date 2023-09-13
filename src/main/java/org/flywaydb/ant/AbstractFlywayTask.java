@@ -468,21 +468,6 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param oracleSqlplus Whether to Flyway's support for Oracle SQL*Plus commands should be activated. (default: false)
-     */
-    public void setOracleSqlplus(boolean oracleSqlplus) {
-        this.flywayConfig.oracleSqlplus(oracleSqlplus);
-    }
-
-    /**
-     * @param oracleSqlplusWarn Whether Flyway should issue a warning instead of an error whenever it encounters an Oracle SQL*Plus statement it doesn't yet
-     *                          support. (default: false)
-     */
-    public void setOracleSqlplusWarn(boolean oracleSqlplusWarn) {
-        this.flywayConfig.oracleSqlplusWarn(oracleSqlplusWarn);
-    }
-
-    /**
      * @param loggers The loggers Flyway should use. Comma-separated values.
      */
     public void setLoggers(String loggers) {
