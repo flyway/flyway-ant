@@ -15,16 +15,6 @@
  */
 package org.flywaydb.ant;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -38,6 +28,10 @@ import org.flywaydb.core.api.logging.LogFactory;
 import org.flywaydb.core.internal.jdbc.DriverDataSource;
 import org.flywaydb.core.internal.util.ExceptionUtils;
 import org.flywaydb.core.internal.util.StringUtils;
+
+import javax.sql.DataSource;
+import java.io.File;
+import java.util.*;
 
 /**
  * Base class for all Flyway Ant tasks.
@@ -304,13 +298,6 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param undoSqlMigrationPrefix The file name prefix for undo SQL migrations (default: U)
-     */
-    public void setUndoSqlMigrationPrefix(String undoSqlMigrationPrefix) {
-        this.flywayConfig.undoSqlMigrationPrefix(undoSqlMigrationPrefix);
-    }
-
-    /**
      * @param sqlMigrationSeparator The file name separator for Sql migrations (default: V)
      */
     public void setSqlMigrationSeparator(String sqlMigrationSeparator) {
@@ -446,14 +433,6 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param cherryPicks A Comma separated list of migrations that Flyway should consider when migrating, undoing, or repairing. Leave blank to consider all
-     *                    discovered migrations.
-     */
-    public void setCherryPick(String cherryPicks) {
-        this.flywayConfig.cherryPick(StringUtils.tokenizeToStringArray(cherryPicks, ","));
-    }
-
-    /**
      * @param outputQueryResults Controls whether Flyway should output a table with the results of queries when executing migrations.
      */
     public void setOutputQueryResults(boolean outputQueryResults) {
@@ -472,13 +451,6 @@ public abstract class AbstractFlywayTask extends Task {
      */
     public void setLoggers(String loggers) {
         this.flywayConfig.loggers(StringUtils.tokenizeToStringArray(loggers, ","));
-    }
-
-    /**
-     * @param licenseKey Flyway's license key.
-     */
-    public void setLicenseKey(String licenseKey) {
-        this.flywayConfig.licenseKey(licenseKey);
     }
 
     /**
