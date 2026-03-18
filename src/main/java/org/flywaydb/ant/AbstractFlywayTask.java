@@ -341,13 +341,6 @@ public abstract class AbstractFlywayTask extends Task {
     }
 
     /**
-     * @param cleanOnValidationError Whether to automatically call clean or not when a validation error occurs. (default: false)
-     */
-    public void setCleanOnValidationError(boolean cleanOnValidationError) {
-        this.flywayConfig.cleanOnValidationError(cleanOnValidationError);
-    }
-
-    /**
      * @param cleanDisabled Whether to disable clean. (default: false)
      */
     public void setCleanDisabled(boolean cleanDisabled) {

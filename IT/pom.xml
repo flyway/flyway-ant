@@ -40,13 +40,13 @@
         <dependency>
             <groupId>com.ttulka.flyway</groupId>
             <artifactId>flyway-ant</artifactId>
-            <version>2.25.2</version>
+            <version>2.26.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>11.20.3</version>
+            <version>12.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
